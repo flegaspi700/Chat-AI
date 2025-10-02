@@ -1,8 +1,10 @@
+import { ReactNode } from "react";
 import { Logo } from "./icons";
 
-export function ChatHeader() {
+export function ChatHeader({ children }: { children?: ReactNode }) {
   return (
     <header className="flex items-center gap-3 border-b p-4">
+      {children}
       <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
         <Logo className="h-6 w-6" />
       </div>

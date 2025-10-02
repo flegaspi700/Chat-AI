@@ -7,10 +7,18 @@ import { useToast } from '@/hooks/use-toast';
 import { ChatHeader } from '@/components/chat-header';
 import { ChatMessages, ChatMessagesSkeleton } from '@/components/chat-messages';
 import { ChatInputForm } from '@/components/chat-input-form';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarInset,
+  SidebarTrigger,
+} from '@/components/ui/sidebar';
+import { FileUpload } from '@/components/file-upload';
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [file, setFile] = useState<FileInfo>(null);
+  const [files, setFiles] = useState<FileInfo[]>([]);
   const [pending, setPending] = useState(false);
   const { toast } = useToast();
 
@@ -21,7 +29,8 @@ export default function Home() {
     setMessages((prev) => [...prev, userMessage]);
     setPending(true);
 
-    const result = await getAIResponse(userInput, file?.content);
+    const fileContent = files.map(f => `File: ${f.name}\n${f.content}`).join('\n\n');
+    const result = await getAIResponse(userInput, fileContent || undefined);
 
     if (result.error) {
       toast({
@@ -39,22 +48,32 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-background">
-      <div className="flex flex-col w-full max-w-4xl h-screen bg-card border-x">
-        <ChatHeader />
-        <div className="flex-1 overflow-y-auto p-4 md:p-6">
-          <ChatMessages messages={messages} />
-          {pending && <ChatMessagesSkeleton />}
-        </div>
-        <div className="p-4 md:p-6 border-t bg-card">
-          <ChatInputForm
-            file={file}
-            setFile={setFile}
-            onSubmit={handleFormSubmit}
-            isPending={pending}
-          />
-        </div>
-      </div>
-    </main>
+    <>
+      <Sidebar>
+        <SidebarHeader>
+          <h2 className="text-lg font-semibold font-headline">Uploaded Files</h2>
+        </SidebarHeader>
+        <SidebarContent>
+          <FileUpload files={files} setFiles={setFiles} />
+        </SidebarContent>
+      </Sidebar>
+      <SidebarInset>
+        <main className="flex flex-col h-screen bg-card border-x">
+          <ChatHeader>
+             <SidebarTrigger />
+          </ChatHeader>
+          <div className="flex-1 overflow-y-auto p-4 md:p-6">
+            <ChatMessages messages={messages} hasFiles={files.length > 0} />
+            {pending && <ChatMessagesSkeleton />}
+          </div>
+          <div className="p-4 md:p-6 border-t bg-card">
+            <ChatInputForm
+              onSubmit={handleFormSubmit}
+              isPending={pending}
+            />
+          </div>
+        </main>
+      </SidebarInset>
+    </>
   );
 }

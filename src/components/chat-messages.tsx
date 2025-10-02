@@ -8,9 +8,10 @@ import { Logo } from './icons';
 
 interface ChatMessagesProps {
   messages: Message[];
+  hasFiles: boolean;
 }
 
-export function ChatMessages({ messages }: ChatMessagesProps) {
+export function ChatMessages({ messages, hasFiles }: ChatMessagesProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export function ChatMessages({ messages }: ChatMessagesProps) {
         </div>
         <h2 className="text-2xl font-headline font-semibold">Welcome to FileChat AI</h2>
         <p className="max-w-md text-muted-foreground">
-          Upload a TXT or PDF file and start asking questions to get insights from your document.
+          {hasFiles ? 'Your files are ready. Ask a question to get started.' : 'Upload a TXT or PDF file and start asking questions to get insights from your document.'}
         </p>
       </div>
     );
