@@ -25,7 +25,7 @@ export function ChatMessages({ messages }: ChatMessagesProps) {
         </div>
         <h2 className="text-2xl font-headline font-semibold">Welcome to FileChat AI</h2>
         <p className="max-w-md text-muted-foreground">
-          Upload a TXT file and start asking questions to get insights from your document.
+          Upload a TXT or PDF file and start asking questions to get insights from your document.
         </p>
       </div>
     );

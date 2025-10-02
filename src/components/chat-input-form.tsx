@@ -7,6 +7,9 @@ import { Paperclip, SendHorizonal, X, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import * as pdfjsLib from 'pdf.js-dist';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdf.js-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
 interface ChatInputFormProps {
   file: FileInfo;
@@ -20,7 +23,7 @@ export function ChatInputForm({ file, setFile, onSubmit, isPending }: ChatInputF
   const [userInput, setUserInput] = useState('');
   const { toast } = useToast();
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       if (selectedFile.type === 'text/plain') {
@@ -36,11 +39,52 @@ export function ChatInputForm({ file, setFile, onSubmit, isPending }: ChatInputF
           })
         };
         reader.readAsText(selectedFile);
+      } else if (selectedFile.type === 'application/pdf') {
+        try {
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            if (!e.target?.result) return;
+            try {
+              const loadingTask = pdfjsLib.getDocument(new Uint8Array(e.target.result as ArrayBuffer));
+              const pdf = await loadingTask.promise;
+              let fullText = '';
+              for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => 'str' in item ? item.str : '').join(' ');
+                fullText += pageText + '\n';
+              }
+              setFile({
+                name: selectedFile.name,
+                content: fullText,
+              });
+              toast({
+                title: 'File attached',
+                description: `${selectedFile.name} is ready for analysis.`,
+              });
+            } catch (error) {
+              console.error('Error parsing PDF:', error);
+              toast({
+                variant: 'destructive',
+                title: 'Error reading PDF',
+                description: 'Could not read text from the PDF file.',
+              });
+            }
+          };
+          reader.readAsArrayBuffer(selectedFile);
+        } catch (error) {
+          console.error('Error reading file:', error);
+           toast({
+            variant: 'destructive',
+            title: 'File Read Error',
+            description: 'There was an error reading the selected file.',
+          });
+        }
       } else {
         toast({
           variant: 'destructive',
           title: 'Unsupported File Type',
-          description: 'Please upload a .txt file.',
+          description: 'Please upload a .txt or .pdf file.',
         });
       }
     }
@@ -90,7 +134,7 @@ export function ChatInputForm({ file, setFile, onSubmit, isPending }: ChatInputF
           ref={fileInputRef}
           onChange={handleFileChange}
           className="hidden"
-          accept=".txt"
+          accept=".txt,.pdf"
         />
         <Button
           type="button"
