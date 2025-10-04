@@ -14,6 +14,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { scrapeUrl } from '@/app/actions';
+import { Separator } from './ui/separator';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
@@ -27,6 +28,9 @@ export function FileUpload({ files, setFiles }: FileUploadProps) {
   const [url, setUrl] = useState('');
   const [isScraping, setIsScraping] = useState(false);
   const { toast } = useToast();
+  
+  const urlSources = files.filter(f => f.type === 'url');
+  const fileSources = files.filter(f => f.type === 'file');
 
   const handleAddUrl = async () => {
     if (!url.trim()) {
@@ -165,8 +169,11 @@ export function FileUpload({ files, setFiles }: FileUploadProps) {
   };
 
   return (
-    <div className="p-2 space-y-2">
+    <div className="p-2 space-y-4">
       <div className="space-y-2">
+        <h3 className="px-2 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+          URLs
+        </h3>
         <Input
           type="url"
           placeholder="Enter a website URL"
@@ -187,68 +194,98 @@ export function FileUpload({ files, setFiles }: FileUploadProps) {
           )}
           {isScraping ? 'Scraping...' : 'Add URL'}
         </Button>
+         <div className="space-y-2">
+            {urlSources.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-2">
+                No URLs added.
+            </p>
+            ) : urlSources.map(file => (
+            <div
+                key={file.source}
+                className="flex items-center gap-2 rounded-md border bg-secondary/50 p-2 text-sm"
+            >
+                <Link className="h-5 w-5 text-primary" />
+                <span className="flex-1 truncate font-medium" title={file.name}>
+                {file.name}
+                </span>
+                <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={() => removeFile(file.source)}
+                    >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">Remove</span>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Remove {file.name}</p>
+                </TooltipContent>
+                </Tooltip>
+            </div>
+            ))}
+        </div>
       </div>
 
-      <div className="relative flex items-center py-2">
-        <div className="flex-grow border-t border-muted"></div>
-        <span className="flex-shrink mx-4 text-xs text-muted-foreground">OR</span>
-        <div className="flex-grow border-t border-muted"></div>
-      </div>
+      <Separator />
 
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        className="hidden"
-        accept=".txt,.pdf"
-        multiple
-      />
-      <Button
-        variant="outline"
-        className="w-full"
-        onClick={() => fileInputRef.current?.click()}
-      >
-        <Plus className="mr-2" />
-        Add Files
-      </Button>
       <div className="space-y-2">
-        {files.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            No files or URLs added.
-          </p>
-        )}
-        {files.map(file => (
-          <div
-            key={file.source}
-            className="flex items-center gap-2 rounded-md border bg-secondary/50 p-2 text-sm"
-          >
-            {file.type === 'file' ? (
-              <FileText className="h-5 w-5 text-primary" />
-            ) : (
-              <Link className="h-5 w-5 text-primary" />
-            )}
-            <span className="flex-1 truncate font-medium" title={file.name}>
-              {file.name}
-            </span>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={() => removeFile(file.source)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                  <span className="sr-only">Remove</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Remove {file.name}</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        ))}
+         <h3 className="px-2 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+          Files
+        </h3>
+        <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+            accept=".txt,.pdf"
+            multiple
+        />
+        <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => fileInputRef.current?.click()}
+        >
+            <Plus className="mr-2" />
+            Add Files
+        </Button>
+        <div className="space-y-2">
+            {fileSources.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-2">
+                No files added.
+            </p>
+            ) : fileSources.map(file => (
+            <div
+                key={file.source}
+                className="flex items-center gap-2 rounded-md border bg-secondary/50 p-2 text-sm"
+            >
+                <FileText className="h-5 w-5 text-primary" />
+                <span className="flex-1 truncate font-medium" title={file.name}>
+                {file.name}
+                </span>
+                <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={() => removeFile(file.source)}
+                    >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="sr-only">Remove</span>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Remove {file.name}</p>
+                </TooltipContent>
+                </Tooltip>
+            </div>
+            ))}
+        </div>
       </div>
     </div>
   );
