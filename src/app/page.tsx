@@ -29,7 +29,7 @@ export default function Home() {
     setMessages((prev) => [...prev, userMessage]);
     setPending(true);
 
-    const fileContent = files.map(f => `File: ${f.name}\n${f.content}`).join('\n\n');
+    const fileContent = files.map(f => `Source: ${f.name} (${f.type})\n${f.content}`).join('\n\n---\n\n');
     const result = await getAIResponse(userInput, fileContent || undefined);
 
     if (result.error) {
@@ -51,7 +51,7 @@ export default function Home() {
     <>
       <Sidebar>
         <SidebarHeader>
-          <h2 className="text-lg font-semibold font-headline">Uploaded Files</h2>
+          <h2 className="text-lg font-semibold font-headline">Sources</h2>
         </SidebarHeader>
         <SidebarContent>
           <FileUpload files={files} setFiles={setFiles} />

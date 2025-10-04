@@ -7,4 +7,6 @@ export type Message = {
 export type FileInfo = {
   name: string;
   content: string;
+  type: 'file' | 'url';
+  source: string;
 };

@@ -13,7 +13,7 @@ import {z} from 'genkit';
 
 const GenerateChatbotResponseInputSchema = z.object({
   userInput: z.string().describe('The user input to the chatbot.'),
-  fileContent: z.string().optional().describe('The content of the uploaded file(s), if any. Each file starts with "File: <filename>".'),
+  fileContent: z.string().optional().describe('The content of the uploaded file(s) or scraped URL(s), if any. Each source starts with "Source: <name> (type)".'),
 });
 export type GenerateChatbotResponseInput = z.infer<typeof GenerateChatbotResponseInputSchema>;
 
@@ -30,9 +30,9 @@ const prompt = ai.definePrompt({
   name: 'generateChatbotResponsePrompt',
   input: {schema: GenerateChatbotResponseInputSchema},
   output: {schema: GenerateChatbotResponseOutputSchema},
-  prompt: `You are a helpful AI chatbot. Use the content from the uploaded file(s) and the user's input to generate a relevant and informative response. When referencing a specific file, please mention it by name.
+  prompt: `You are a helpful AI chatbot. Use the content from the provided sources (files or websites) and the user's input to generate a relevant and informative response. When referencing a specific source, please mention it by name.
 
-File Content(s):
+Sources:
 {{{fileContent}}}
 
 User Input: {{{userInput}}}
