@@ -8,7 +8,7 @@
 - **Website Scraping**: Users can provide any website URL, and the application will scrape its content to use as a source for the chat.
 - **Source Management**: A clean sidebar interface allows users to easily add, view, and remove their file and URL sources, organized into separate sections.
 
-## Style Guidelines:
+## Style Guidelines: test
 
 - **Primary color**: HSL 220, 70%, 50% - A deep, saturated blue (#3682CD) evokes trust, intelligence, and communication.
 - **Background color**: HSL 220, 20%, 95% - A very light, desaturated blue (#F0F4F8) creates a calm and professional atmosphere.
