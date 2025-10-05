@@ -56,7 +56,7 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-  .gray {
+  html[data-theme='gray'] {
     --background: 220 10% 20%;
     --foreground: 220 10% 95%;
     --card: 220 10% 22%;
