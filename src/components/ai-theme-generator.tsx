@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useTheme } from "next-themes";
 import { Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,8 +18,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { generateAITheme } from "@/app/actions";
+import type { AITheme } from "@/lib/types";
 
-export function AiThemeGenerator() {
+interface AiThemeGeneratorProps {
+  setAiTheme?: Dispatch<SetStateAction<AITheme | null>>;
+}
+
+export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -27,6 +32,8 @@ export function AiThemeGenerator() {
   const { toast } = useToast();
 
   const handleGenerate = async () => {
+    if (!setAiTheme) return;
+
     setIsGenerating(true);
     const result = await generateAITheme(prompt);
     setIsGenerating(false);
@@ -40,7 +47,7 @@ export function AiThemeGenerator() {
       return;
     }
 
-    const { themeName, palette } = result.theme;
+    const { themeName, palette, imageHint } = result.theme;
     const themeId = `ai-${themeName.replace(/\s+/g, '-')}`;
 
     // Create a new style element
@@ -78,6 +85,9 @@ export function AiThemeGenerator() {
     
     // Add the new theme to the head
     document.head.appendChild(style);
+
+    // Update parent state
+    setAiTheme({ id: themeId, name: themeName, imageHint });
 
     // Update next-themes
     const newThemes = [...themes.filter(t => !t.startsWith('ai-')), themeId];

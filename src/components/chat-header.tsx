@@ -1,8 +1,14 @@
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import { Logo } from "./icons";
 import { SettingsMenu } from "./settings-menu";
+import type { AITheme } from "@/lib/types";
 
-export function ChatHeader({ children }: { children?: ReactNode }) {
+interface ChatHeaderProps {
+  children?: ReactNode;
+  setAiTheme?: Dispatch<SetStateAction<AITheme | null>>;
+}
+
+export function ChatHeader({ children, setAiTheme }: ChatHeaderProps) {
   return (
     <header className="flex items-center gap-3 border-b p-4">
       {children}
@@ -13,7 +19,7 @@ export function ChatHeader({ children }: { children?: ReactNode }) {
         <h1 className="text-lg font-bold font-headline">FileChat AI</h1>
         <p className="text-sm text-muted-foreground">Chat with your documents</p>
       </div>
-      <SettingsMenu />
+      <SettingsMenu setAiTheme={setAiTheme} />
     </header>
   );
 }

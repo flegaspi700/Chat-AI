@@ -14,8 +14,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { AiThemeGenerator } from "./ai-theme-generator"
+import type { AITheme } from "@/lib/types"
 
-export function SettingsMenu() {
+interface SettingsMenuProps {
+  setAiTheme?: React.Dispatch<React.SetStateAction<AITheme | null>>;
+}
+
+export function SettingsMenu({ setAiTheme }: SettingsMenuProps) {
   const { setTheme } = useTheme()
 
   return (
@@ -46,7 +51,7 @@ export function SettingsMenu() {
           <span>System</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <AiThemeGenerator />
+        <AiThemeGenerator setAiTheme={setAiTheme} />
       </DropdownMenuContent>
     </DropdownMenu>
   )

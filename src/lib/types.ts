@@ -10,3 +10,9 @@ export type FileInfo = {
   type: 'file' | 'url';
   source: string;
 };
+
+export type AITheme = {
+  id: string;
+  name: string;
+  imageHint: string;
+};

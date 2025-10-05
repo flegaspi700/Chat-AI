@@ -1,13 +1,13 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import * as pdfjsLib from 'pdfjs-dist';
 import { FileText, Link, Plus, Trash2, Loader2 } from 'lucide-react';
-import { FileInfo } from '@/lib/types';
+import { FileInfo, AITheme } from '@/lib/types';
 import {
   Tooltip,
   TooltipContent,
@@ -15,15 +15,17 @@ import {
 } from '@/components/ui/tooltip';
 import { scrapeUrl } from '@/app/actions';
 import { Separator } from './ui/separator';
+import { cn } from '@/lib/utils';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
 interface FileUploadProps {
   files: FileInfo[];
   setFiles: Dispatch<SetStateAction<FileInfo[]>>;
+  aiTheme: AITheme | null;
 }
 
-export function FileUpload({ files, setFiles }: FileUploadProps) {
+export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [url, setUrl] = useState('');
   const [isScraping, setIsScraping] = useState(false);
@@ -31,6 +33,12 @@ export function FileUpload({ files, setFiles }: FileUploadProps) {
   
   const urlSources = files.filter(f => f.type === 'url');
   const fileSources = files.filter(f => f.type === 'file');
+
+  const backgroundImage = useMemo(() => {
+    if (!aiTheme?.imageHint) return 'none';
+    const seed = aiTheme.id.replace(/\D/g, ''); // Use theme id for a consistent image
+    return `linear-gradient(to bottom, hsl(var(--background) / 0.8), hsl(var(--background) / 0.8)), url(https://picsum.photos/seed/${seed}/400/600)`;
+  }, [aiTheme]);
 
   const handleAddUrl = async () => {
     if (!url.trim()) {
@@ -169,7 +177,11 @@ export function FileUpload({ files, setFiles }: FileUploadProps) {
   };
 
   return (
-    <div className="p-2 space-y-4">
+    <div
+      className={cn('p-2 space-y-4 transition-all duration-500', aiTheme && 'bg-cover bg-center')}
+      style={{ backgroundImage }}
+      data-ai-hint={aiTheme?.imageHint}
+    >
       <div className="space-y-2">
         <h3 className="px-2 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
           URLs
@@ -202,7 +214,7 @@ export function FileUpload({ files, setFiles }: FileUploadProps) {
             ) : urlSources.map(file => (
             <div
                 key={file.source}
-                className="flex items-center gap-2 rounded-md border bg-secondary/50 p-2 text-sm"
+                className="flex items-center gap-2 rounded-md border bg-card/70 backdrop-blur-sm p-2 text-sm"
             >
                 <Link className="h-5 w-5 text-primary" />
                 <span className="flex-1 truncate font-medium" title={file.name}>
@@ -260,7 +272,7 @@ export function FileUpload({ files, setFiles }: FileUploadProps) {
             ) : fileSources.map(file => (
             <div
                 key={file.source}
-                className="flex items-center gap-2 rounded-md border bg-secondary/50 p-2 text-sm"
+                className="flex items-center gap-2 rounded-md border bg-card/70 backdrop-blur-sm p-2 text-sm"
             >
                 <FileText className="h-5 w-5 text-primary" />
                 <span className="flex-1 truncate font-medium" title={file.name}>
