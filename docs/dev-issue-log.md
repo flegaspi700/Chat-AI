@@ -33,4 +33,10 @@ A series of issues were encountered while implementing the theme switching featu
 
 6.  **Theme Icon Not Updating:** The sun/moon icon in the theme toggle button did not change to reflect the current theme.
     *   **Cause:** The `tailwind.config.ts` was configured with `darkMode: ['class']`, but the application was using the `data-theme` attribute.
-    *   **Resolution:** Updated `tailwind.config.ts` to `darkMode: ['attr', 'data-theme']` to allow Tailwind's `dark:` utility to work with the `data-theme="dark"` attribute.
+    *   **Resolution:** Updated `tailwind.config.ts` to `darkMode: ['attr', 'data-theme']` to allow Tailwind's `dark:` utility to work with the `data-theme="dark"` attribute. The issue persisted and was finally resolved by conditionally rendering the icons based on the `useTheme` hook's state.
+
+## AI Theme Generation
+
+1.  **AI-Generated Background Not Updating:** After generating one AI theme with a background, subsequent theme generations would not change the background image in the "Sources" panel.
+    *   **Cause:** The component logic was not correctly handling the removal of previously generated AI theme styles. Old `<style>` tags were being left in the document head, causing CSS conflicts.
+    *   **Resolution:** Modified the `handleGenerate` function in `ai-theme-generator.tsx` to query and remove any `style` elements with an ID starting with `theme-ai-` before appending the new one.
