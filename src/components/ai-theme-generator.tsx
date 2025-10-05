@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTheme } from "next-themes";
 import { Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,20 +16,86 @@ import {
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { generateAITheme } from "@/app/actions";
 
 export function AiThemeGenerator() {
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const { theme, setTheme, themes, resolvedTheme } = useTheme();
+  const { toast } = useToast();
 
   const handleGenerate = async () => {
-    // This is where we will call the Genkit flow in the future.
     setIsGenerating(true);
-    console.log("Generating theme for prompt:", prompt);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const result = await generateAITheme(prompt);
     setIsGenerating(false);
-    setOpen(false); // Close dialog on success
+
+    if (result.error || !result.theme) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: result.error || "Could not generate theme.",
+      });
+      return;
+    }
+
+    const { themeName, palette } = result.theme;
+    const themeId = `ai-${themeName.replace(/\s+/g, '-')}`;
+
+    // Create a new style element
+    const style = document.createElement('style');
+    style.id = `theme-${themeId}`;
+    style.innerHTML = `
+      html[data-theme='${themeId}'] {
+        --background: ${palette.background};
+        --foreground: ${palette.foreground};
+        --card: ${palette.card};
+        --card-foreground: ${palette.foreground};
+        --popover: ${palette.card};
+        --popover-foreground: ${palette.foreground};
+        --primary: ${palette.primary};
+        --primary-foreground: ${palette.primaryForeground};
+        --secondary: ${palette.secondary};
+        --secondary-foreground: ${palette.foreground};
+        --muted: ${palette.secondary};
+        --muted-foreground: ${palette.foreground};
+        --accent: ${palette.accent};
+        --accent-foreground: ${palette.primaryForeground};
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: ${palette.border};
+        --input: ${palette.border};
+        --ring: ${palette.primary};
+      }
+    `;
+    
+    // Remove old AI theme if it exists
+    const existingTheme = document.querySelector('[id^="theme-ai-"]');
+    if (existingTheme) {
+      existingTheme.remove();
+    }
+    
+    // Add the new theme to the head
+    document.head.appendChild(style);
+
+    // Update next-themes
+    const newThemes = [...themes.filter(t => !t.startsWith('ai-')), themeId];
+    // @ts-ignore - next-themes has an issue with the themes prop not being updated
+    setTheme('light'); 
+    // A little hack to force re-evaluation of themes
+    setTimeout(() => {
+        // @ts-ignore
+        setTheme(resolvedTheme === 'dark' ? 'dark' : 'light');
+        setTheme(themeId);
+    }, 100);
+
+    toast({
+      title: "Theme Generated!",
+      description: `The new theme "${themeName}" has been applied.`,
+    });
+
+    setOpen(false);
   };
 
   return (

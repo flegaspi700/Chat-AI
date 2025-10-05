@@ -1,6 +1,7 @@
 "use server";
 
 import { generateChatbotResponse } from "@/ai/flows/generate-chatbot-response";
+import { generateTheme, GenerateThemeOutput } from "@/ai/flows/generate-theme";
 import { scrapeWebsite } from "@/ai/flows/scrape-website";
 
 export async function getAIResponse(
@@ -37,5 +38,21 @@ export async function scrapeUrl(
     console.error(`Scraping error for ${url}:`, error);
     const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
     return { error: `Failed to scrape content from the URL. ${errorMessage}` };
+  }
+}
+
+export async function generateAITheme(prompt: string): Promise<{
+  theme?: GenerateThemeOutput;
+  error?: string;
+}> {
+  if (!prompt) {
+    return { error: "Prompt is empty." };
+  }
+  try {
+    const theme = await generateTheme({ prompt });
+    return { theme };
+  } catch (error) {
+    console.error("Theme generation error:", error);
+    return { error: "Failed to generate AI theme. Please try again." };
   }
 }
