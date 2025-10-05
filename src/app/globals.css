@@ -30,7 +30,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
-  .dark {
+  html[data-theme='dark'] {
     --background: 220 10% 10%;
     --foreground: 220 10% 95%;
     --card: 220 10% 12%;
