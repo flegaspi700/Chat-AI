@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Logo } from "./icons";
-import { ThemeToggle } from "./theme-toggle";
+import { SettingsMenu } from "./settings-menu";
 
 export function ChatHeader({ children }: { children?: ReactNode }) {
   return (
@@ -13,7 +13,7 @@ export function ChatHeader({ children }: { children?: ReactNode }) {
         <h1 className="text-lg font-bold font-headline">FileChat AI</h1>
         <p className="text-sm text-muted-foreground">Chat with your documents</p>
       </div>
-      <ThemeToggle />
+      <SettingsMenu />
     </header>
   );
 }
