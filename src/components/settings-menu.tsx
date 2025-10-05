@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { AiThemeGenerator } from "./ai-theme-generator"
 
 export function SettingsMenu() {
   const { setTheme } = useTheme()
@@ -44,6 +45,8 @@ export function SettingsMenu() {
           <Monitor className="mr-2 h-4 w-4" />
           <span>System</span>
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <AiThemeGenerator />
       </DropdownMenuContent>
     </DropdownMenu>
   )
