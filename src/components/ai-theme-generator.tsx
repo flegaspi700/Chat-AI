@@ -50,6 +50,9 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
     const { themeName, palette, imageHint } = result.theme;
     const themeId = `ai-${themeName.replace(/\s+/g, '-')}`;
 
+    // Remove any existing AI theme style elements
+    document.querySelectorAll('[id^="theme-ai-"]').forEach((el) => el.remove());
+
     // Create a new style element
     const style = document.createElement('style');
     style.id = `theme-${themeId}`;
@@ -77,29 +80,28 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
       }
     `;
     
-    // Remove old AI theme if it exists
-    const existingTheme = document.querySelector('[id^="theme-ai-"]');
-    if (existingTheme) {
-      existingTheme.remove();
-    }
-    
     // Add the new theme to the head
     document.head.appendChild(style);
 
     // Update parent state
     setAiTheme({ id: themeId, name: themeName, imageHint });
 
-    // Update next-themes
-    const newThemes = [...themes.filter(t => !t.startsWith('ai-')), themeId];
-    // @ts-ignore - next-themes has an issue with the themes prop not being updated
-    setTheme('light'); 
-    // A little hack to force re-evaluation of themes
-    setTimeout(() => {
+    // Update next-themes by adding the new theme to the list and setting it
+    if (!themes.includes(themeId)) {
+        const newThemes = [...themes, themeId];
+        // @ts-ignore - a known issue with next-themes, this forces a re-render.
+        setTheme('light'); 
         // @ts-ignore
-        setTheme(resolvedTheme === 'dark' ? 'dark' : 'light');
+        setTheme('dark');
+        setTimeout(() => {
+            // @ts-ignore
+            setTheme(resolvedTheme);
+            setTheme(themeId)
+        }, 10)
+    } else {
         setTheme(themeId);
-    }, 100);
-
+    }
+    
     toast({
       title: "Theme Generated!",
       description: `The new theme "${themeName}" has been applied.`,
