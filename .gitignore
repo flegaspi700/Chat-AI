@@ -12,10 +12,15 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
+/.playwright/
+playwright/.cache/
 
 # next.js
 /.next/
 /out/
+/.swc/
 
 # production
 /build
@@ -23,12 +28,16 @@
 # misc
 .DS_Store
 *.pem
+.idx/
+.modified
+COMMIT-GUIDE.md
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
 # vercel
 .vercel
@@ -39,7 +48,9 @@ next-env.d.ts
 
 .genkit/*
 .env*
+!.env.example
 
 # firebase
 firebase-debug.log
 firestore-debug.log
+ui-debug.log

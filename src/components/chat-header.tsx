@@ -1,6 +1,7 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import { Logo } from "./icons";
 import { SettingsMenu } from "./settings-menu";
+import { ThemeToggleButton } from "./theme-toggle-button";
 import type { AITheme } from "@/lib/types";
 
 interface ChatHeaderProps {
@@ -19,6 +20,7 @@ export function ChatHeader({ children, setAiTheme }: ChatHeaderProps) {
         <h1 className="text-lg font-bold font-headline">FileChat AI</h1>
         <p className="text-sm text-muted-foreground">Chat with your documents</p>
       </div>
+      <ThemeToggleButton />
       <SettingsMenu setAiTheme={setAiTheme} />
     </header>
   );
