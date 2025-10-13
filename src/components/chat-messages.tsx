@@ -51,13 +51,13 @@ export function ChatMessages({ messages, hasFiles }: ChatMessagesProps) {
           )}
           <div
             className={cn(
-              'max-w-xl rounded-lg p-3',
+              'max-w-3xl rounded-lg p-4',
               message.role === 'user'
                 ? 'bg-primary text-primary-foreground'
-                : 'bg-secondary text-secondary-foreground'
+                : 'bg-secondary text-secondary-foreground border'
             )}
           >
-            <div className="prose prose-sm dark:prose-invert whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: message.content }} />
+            <div className="prose prose-sm dark:prose-invert whitespace-pre-wrap break-words" dangerouslySetInnerHTML={{ __html: message.content }} />
           </div>
           {message.role === 'user' && (
             <Avatar className="h-9 w-9">

@@ -5,7 +5,11 @@ An intelligent chat application built with Next.js 15 and Google Genkit that all
 ## ✨ Features
 
 - **💬 Conversational AI Chat:** Interact with Google Gemini 2.5 Flash to ask questions and get information from your provided sources
-- **📄 File Uploads:** Upload and process both `.txt` and `.pdf` files to use as a knowledge base
+- **⚡ Streaming Responses:** Real-time AI response streaming with animated progress indicator
+- **💾 Auto-Save Everything:** Messages, sources, and themes automatically persist across sessions
+- **🔒 Input Validation:** Comprehensive security with file size limits, URL validation, and SSRF protection
+- **🛡️ Error Boundaries:** Graceful error handling with recovery options - prevents app crashes ✨ NEW
+- **� File Uploads:** Upload and process both `.txt` and `.pdf` files (10MB limit) to use as a knowledge base
 - **🌐 Website Scraping:** Provide any website URL, and the application will scrape its content to use as a source
 - **📊 Source Management:** Clean sidebar interface to easily add, view, and remove your files and URL sources
 - **🎨 AI-Powered Theme Generation:** Dynamically create and apply color themes based on a text prompt
@@ -109,22 +113,25 @@ Comprehensive documentation is available in the `docs/` folder:
 
 ## 🎯 Project Status
 
-### ✅ What's Working (Oct 7, 2025)
+### ✅ What's Working (Oct 13, 2025)
 
 - **Chat Interface** - Full conversational AI with context from sources
-- **File Upload** - `.txt` and `.pdf` file processing
-- **URL Scraping** - Website content extraction
+- **Response Streaming** - Real-time token-by-token AI responses
+- **Data Persistence** - Auto-save/restore messages, sources, and themes
+- **Input Validation** - Comprehensive security and data validation ✨ NEW
+- **File Upload** - `.txt` and `.pdf` file processing with size limits (10MB)
+- **URL Scraping** - Website content extraction with SSRF protection
 - **Source Management** - Add/remove files and URLs
 - **Theme System** - Dark/light mode + AI-generated themes
 - **Testing** - 65+ tests, 42% coverage
 
 ### 🚧 Known Limitations
 
-- No chat history persistence (page refresh clears conversation)
 - No user authentication (single-user local app)
-- No response streaming (full response wait)
 - Mobile responsive layout needs refinement
-- Limited to 2 file types (txt, pdf)
+- Limited to 2 file types (txt, pdf - 10MB max)
+- 5MB localStorage limit (can store ~1000 messages)
+- Content limits (500K chars per file, 100K chars per message)
 
 See **[Development Issue Log](./docs/04-development/dev-issue-log.md)** for detailed status.
 
@@ -133,11 +140,12 @@ See **[Development Issue Log](./docs/04-development/dev-issue-log.md)** for deta
 ## 🔮 Next Steps & Roadmap
 
 ### High Priority (Production Ready)
-1. **Persist Sources & Themes** - Save to localStorage for session persistence
-2. **Streaming Responses** - Token-by-token AI response streaming
-3. **Mobile Responsive Layout** - Improved mobile sidebar and layout
-4. **Error Boundaries** - Better error handling and fallback UI
-5. **Input Validation** - File size limits and content validation
+1. ~~**Persist Sources & Themes**~~ ✅ COMPLETED (Oct 13, 2025)
+2. ~~**Streaming Responses**~~ ✅ COMPLETED (Oct 13, 2025)
+3. ~~**Input Validation**~~ ✅ COMPLETED (Oct 13, 2025)
+4. ~~**UI Layout Improvements**~~ ✅ COMPLETED (Oct 13, 2025)
+5. ~~**Error Boundaries**~~ ✅ COMPLETED (Oct 13, 2025)
+6. **Mobile Responsive Layout** - Auto-close sidebar, touch optimization
 
 ### Medium Priority (Enhanced UX)
 6. **Chat History** - Save and load past conversations
@@ -216,14 +224,17 @@ Contributions are welcome! Please see:
 
 ---
 
-## 📊 Project Metrics (Oct 7, 2025)
+## 📊 Project Metrics
 
-- **Lines of Code:** ~2,000+ lines (production)
-- **Documentation:** ~4,000+ lines (comprehensive)
-- **Tests:** 65+ tests across Jest and Playwright
-- **Test Coverage:** 42% statements, 57% branches
-- **Components:** 30+ reusable UI components
-- **AI Flows:** 5 Genkit flows
+| Metric | Value | Last Updated |
+|--------|-------|--------------|
+| **Lines of Code** | ~5,300+ lines | Oct 13, 2025 |
+| **Documentation** | ~9,500+ lines | Oct 13, 2025 |
+| **Tests** | 65+ tests | Oct 7, 2025 |
+| **Test Coverage** | 42% statements, 57% branches | Oct 7, 2025 |
+| **Components** | 30+ reusable UI components | Oct 13, 2025 |
+| **AI Flows** | 5 Genkit flows | Oct 7, 2025 |
+| **Custom Hooks** | 5 hooks | Oct 13, 2025 |
 
 ---
 
@@ -243,4 +254,38 @@ Built with:
 
 ---
 
-**Last Updated:** October 7, 2025
+## 🆕 Recent Updates
+
+### October 13, 2025
+- ✅ **Error Boundaries** - Graceful error handling with recovery ✨ NEW
+  - React Error Boundaries wrap critical sections
+  - Custom fallback UI for different components
+  - Error logging with localStorage persistence
+  - Automatic recovery with resetKeys
+  - Next.js error.tsx for SSR errors
+  - Export error logs for debugging
+- ✅ **UI Layout Improvements** - Better screen space utilization
+  - Wider sidebar (20rem)
+  - Centered content with max-width
+  - Responsive padding (mobile to desktop)
+  - Enhanced source cards with hover states
+  - Better message bubble sizing
+- ✅ **Input Validation** - Comprehensive validation with security features
+  - File size limits (10MB max)
+  - URL validation (SSRF/XSS protection)
+  - Content length limits (500K chars)
+  - Detailed error messages
+- ✅ **Persistence Layer** - Auto-save messages, sources, and themes to localStorage
+- ✅ **Response Streaming** - Real-time AI response with animated cursor
+- ✅ **Clear Data Option** - Added "Clear All Data" in settings menu
+- ✅ **Welcome Back Message** - Shows restored data count on load
+- 📚 **Documentation** - Added [error-handling.md](./docs/04-development/error-handling.md), [input-validation.md](./docs/04-development/input-validation.md), and [persistence-streaming-implementation.md](./docs/04-development/persistence-streaming-implementation.md)
+
+### October 7, 2025
+- ✅ **Testing Infrastructure** - Jest + Playwright setup (65+ tests)
+- ✅ **Theme Toggle** - Quick toggle with Ctrl+Shift+T shortcut
+- ✅ **Documentation Reorganization** - 31 files, ~9,000 lines organized
+
+---
+
+**Last Updated:** October 13, 2025

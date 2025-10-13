@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Monitor, Moon, Settings, Sun } from "lucide-react"
+import { Monitor, Moon, Settings, Sun, Trash2 } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
@@ -15,13 +15,30 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { AiThemeGenerator } from "./ai-theme-generator"
 import type { AITheme } from "@/lib/types"
+import { clearAllData } from "@/lib/storage"
+import { useToast } from "@/hooks/use-toast"
 
 interface SettingsMenuProps {
   setAiTheme?: React.Dispatch<React.SetStateAction<AITheme | null>>;
+  onClearData?: () => void;
 }
 
-export function SettingsMenu({ setAiTheme }: SettingsMenuProps) {
+export function SettingsMenu({ setAiTheme, onClearData }: SettingsMenuProps) {
   const { setTheme } = useTheme()
+  const { toast } = useToast()
+
+  const handleClearData = () => {
+    if (confirm('Are you sure you want to clear all saved data? This will remove all messages, sources, and themes.')) {
+      clearAllData();
+      if (onClearData) {
+        onClearData();
+      }
+      toast({
+        title: 'Data cleared',
+        description: 'All saved messages, sources, and themes have been removed.',
+      });
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -52,6 +69,12 @@ export function SettingsMenu({ setAiTheme }: SettingsMenuProps) {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <AiThemeGenerator setAiTheme={setAiTheme} />
+        <DropdownMenuSeparator />
+        <DropdownMenuLabel>Data</DropdownMenuLabel>
+        <DropdownMenuItem onClick={handleClearData} className="text-destructive focus:text-destructive">
+          <Trash2 className="mr-2 h-4 w-4" />
+          <span>Clear All Data</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

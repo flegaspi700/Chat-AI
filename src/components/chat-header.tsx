@@ -7,9 +7,10 @@ import type { AITheme } from "@/lib/types";
 interface ChatHeaderProps {
   children?: ReactNode;
   setAiTheme?: Dispatch<SetStateAction<AITheme | null>>;
+  onClearData?: () => void;
 }
 
-export function ChatHeader({ children, setAiTheme }: ChatHeaderProps) {
+export function ChatHeader({ children, setAiTheme, onClearData }: ChatHeaderProps) {
   return (
     <header className="flex items-center gap-3 border-b p-4">
       {children}
@@ -21,7 +22,7 @@ export function ChatHeader({ children, setAiTheme }: ChatHeaderProps) {
         <p className="text-sm text-muted-foreground">Chat with your documents</p>
       </div>
       <ThemeToggleButton />
-      <SettingsMenu setAiTheme={setAiTheme} />
+      <SettingsMenu setAiTheme={setAiTheme} onClearData={onClearData} />
     </header>
   );
 }

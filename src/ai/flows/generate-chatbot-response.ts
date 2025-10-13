@@ -26,6 +26,37 @@ export async function generateChatbotResponse(input: GenerateChatbotResponseInpu
   return generateChatbotResponseFlow(input);
 }
 
+/**
+ * Streaming version of generateChatbotResponse
+ * Returns an async generator that yields text chunks
+ */
+export async function* generateChatbotResponseStream(input: GenerateChatbotResponseInput): AsyncGenerator<string> {
+  const promptText = `You are a helpful AI chatbot. Use the content from the provided sources (files or websites) and the user's input to generate a relevant and informative response. When referencing a specific source, please mention it by name.
+
+${input.fileContent ? `Sources:\n${input.fileContent}\n\n` : ''}User Input: ${input.userInput}
+
+Response: `;
+
+  const result = await ai.generate({
+    model: 'googleai/gemini-2.5-flash',
+    prompt: promptText,
+    config: {
+      temperature: 0.7,
+    },
+  });
+
+  // For now, we'll simulate streaming by chunking the response
+  // In a future update, we can use true streaming when Genkit supports it better
+  const response = result.text || '';
+  const chunkSize = 10; // characters per chunk
+  
+  for (let i = 0; i < response.length; i += chunkSize) {
+    yield response.slice(i, i + chunkSize);
+    // Small delay to simulate streaming
+    await new Promise(resolve => setTimeout(resolve, 20));
+  }
+}
+
 const prompt = ai.definePrompt({
   name: 'generateChatbotResponsePrompt',
   input: {schema: GenerateChatbotResponseInputSchema},

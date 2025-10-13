@@ -8,6 +8,13 @@ import { useToast } from '@/hooks/use-toast';
 import * as pdfjsLib from 'pdfjs-dist';
 import { FileText, Link, Plus, Trash2, Loader2 } from 'lucide-react';
 import { FileInfo, AITheme } from '@/lib/types';
+import { 
+  validateFile, 
+  validateFileContent,
+  formatFileSize, 
+  formatContentLength,
+  VALIDATION_LIMITS 
+} from '@/lib/validation';
 import {
   Tooltip,
   TooltipContent,
@@ -70,11 +77,13 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
         description: result.error,
       });
     } else if (result.content) {
+      // Ensure content is defined before adding to files
+      const scrapedContent = result.content || '';
       setFiles(prev => [
         ...prev,
         {
           name: result.title || url,
-          content: result.content,
+          content: scrapedContent,
           type: 'url',
           source: url,
         },
@@ -94,6 +103,18 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
     if (!selectedFiles) return;
 
     for (const selectedFile of Array.from(selectedFiles)) {
+      // Validate file before processing
+      const validation = validateFile(selectedFile);
+      if (!validation.isValid) {
+        toast({
+          variant: 'destructive',
+          title: validation.error || 'Invalid file',
+          description: validation.details || 'Please check the file and try again.',
+        });
+        continue;
+      }
+
+      // Check for duplicates
       if (files.some(f => f.name === selectedFile.name && f.type === 'file')) {
         toast({
           variant: 'destructive',
@@ -117,16 +138,10 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
       };
       
       try {
+        let content = '';
+        
         if (selectedFile.type === 'text/plain') {
-          const content = await readFile(selectedFile, 'text') as string;
-          setFiles(prev => [
-            ...prev,
-            { name: selectedFile.name, content, type: 'file', source: selectedFile.name },
-          ]);
-          toast({
-            title: 'File attached',
-            description: `${selectedFile.name} is ready for analysis.`,
-          });
+          content = await readFile(selectedFile, 'text') as string;
         } else if (selectedFile.type === 'application/pdf') {
           const arrayBuffer = await readFile(selectedFile, 'arrayBuffer') as ArrayBuffer;
           if (!arrayBuffer) throw new Error("Could not read PDF file.");
@@ -142,21 +157,40 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
               .join(' ');
             fullText += pageText + '\n';
           }
-          setFiles(prev => [
-            ...prev,
-            { name: selectedFile.name, content: fullText, type: 'file', source: selectedFile.name },
-          ]);
-          toast({
-            title: 'File attached',
-            description: `${selectedFile.name} is ready for analysis.`,
-          });
+          content = fullText;
         } else {
           toast({
             variant: 'destructive',
             title: 'Unsupported File Type',
             description: 'Please upload a .txt or .pdf file.',
           });
+          continue;
         }
+
+        // Validate content length
+        const contentValidation = validateFileContent(content, selectedFile.name);
+        if (!contentValidation.isValid) {
+          toast({
+            variant: 'destructive',
+            title: contentValidation.error || 'Invalid content',
+            description: contentValidation.details || 'File content is too large.',
+          });
+          continue;
+        }
+
+        // Add file to list
+        setFiles(prev => [
+          ...prev,
+          { name: selectedFile.name, content, type: 'file', source: selectedFile.name },
+        ]);
+        
+        // Show success with size info
+        const sizeInfo = formatFileSize(selectedFile.size);
+        const contentInfo = formatContentLength(content.length);
+        toast({
+          title: 'File attached',
+          description: `${selectedFile.name} (${sizeInfo}, ${contentInfo}) is ready for analysis.`,
+        });
       } catch (error) {
         console.error('Error processing file:', error);
         toast({
@@ -178,12 +212,12 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
 
   return (
     <div
-      className={cn('p-2 space-y-4 transition-all duration-500', aiTheme && 'bg-cover bg-center')}
+      className={cn('p-4 space-y-4 transition-all duration-500', aiTheme && 'bg-cover bg-center')}
       style={{ backgroundImage }}
       data-ai-hint={aiTheme?.imageHint}
     >
-      <div className="space-y-2">
-        <h3 className="px-2 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+      <div className="space-y-3">
+        <h3 className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
           URLs
         </h3>
         <Input
@@ -208,16 +242,16 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
         </Button>
          <div className="space-y-2">
             {urlSources.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-2">
+            <p className="text-sm text-muted-foreground text-center py-3">
                 No URLs added.
             </p>
             ) : urlSources.map(file => (
             <div
                 key={file.source}
-                className="flex items-center gap-2 rounded-md border bg-card/70 backdrop-blur-sm p-2 text-sm"
+                className="flex items-center gap-2 rounded-lg border bg-card/80 backdrop-blur-sm p-3 text-sm hover:bg-card transition-colors"
             >
-                <Link className="h-5 w-5 text-primary" />
-                <span className="flex-1 truncate font-medium" title={file.name}>
+                <Link className="h-4 w-4 text-primary shrink-0" />
+                <span className="flex-1 truncate font-medium text-sm" title={file.name}>
                 {file.name}
                 </span>
                 <Tooltip>
@@ -226,7 +260,7 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7"
+                    className="h-8 w-8 shrink-0"
                     onClick={() => removeFile(file.source)}
                     >
                     <Trash2 className="h-4 w-4" />
@@ -244,8 +278,8 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
 
       <Separator />
 
-      <div className="space-y-2">
-         <h3 className="px-2 text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+      <div className="space-y-3">
+         <h3 className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
           Files
         </h3>
         <input
@@ -266,16 +300,16 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
         </Button>
         <div className="space-y-2">
             {fileSources.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-2">
+            <p className="text-sm text-muted-foreground text-center py-3">
                 No files added.
             </p>
             ) : fileSources.map(file => (
             <div
                 key={file.source}
-                className="flex items-center gap-2 rounded-md border bg-card/70 backdrop-blur-sm p-2 text-sm"
+                className="flex items-center gap-2 rounded-lg border bg-card/80 backdrop-blur-sm p-3 text-sm hover:bg-card transition-colors"
             >
-                <FileText className="h-5 w-5 text-primary" />
-                <span className="flex-1 truncate font-medium" title={file.name}>
+                <FileText className="h-4 w-4 text-primary shrink-0" />
+                <span className="flex-1 truncate font-medium text-sm" title={file.name}>
                 {file.name}
                 </span>
                 <Tooltip>
@@ -284,7 +318,7 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7"
+                    className="h-8 w-8 shrink-0"
                     onClick={() => removeFile(file.source)}
                     >
                     <Trash2 className="h-4 w-4" />
