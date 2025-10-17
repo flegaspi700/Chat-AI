@@ -8,8 +8,9 @@ An intelligent chat application built with Next.js 15 and Google Genkit that all
 - **⚡ Streaming Responses:** Real-time AI response streaming with animated progress indicator
 - **💾 Auto-Save Everything:** Messages, sources, and themes automatically persist across sessions
 - **🔒 Input Validation:** Comprehensive security with file size limits, URL validation, and SSRF protection
-- **🛡️ Error Boundaries:** Graceful error handling with recovery options - prevents app crashes ✨ NEW
-- **� File Uploads:** Upload and process both `.txt` and `.pdf` files (10MB limit) to use as a knowledge base
+- **🛡️ Error Boundaries:** Graceful error handling with recovery options - prevents app crashes
+- **📱 Mobile Responsive:** Optimized for all devices with touch-friendly interactions and auto-close sidebar ✨ NEW
+- **📄 File Uploads:** Upload and process both `.txt` and `.pdf` files (10MB limit) to use as a knowledge base
 - **🌐 Website Scraping:** Provide any website URL, and the application will scrape its content to use as a source
 - **📊 Source Management:** Clean sidebar interface to easily add, view, and remove your files and URL sources
 - **🎨 AI-Powered Theme Generation:** Dynamically create and apply color themes based on a text prompt
@@ -113,12 +114,14 @@ Comprehensive documentation is available in the `docs/` folder:
 
 ## 🎯 Project Status
 
-### ✅ What's Working (Oct 13, 2025)
+### ✅ What's Working (Oct 17, 2025)
 
 - **Chat Interface** - Full conversational AI with context from sources
 - **Response Streaming** - Real-time token-by-token AI responses
 - **Data Persistence** - Auto-save/restore messages, sources, and themes
-- **Input Validation** - Comprehensive security and data validation ✨ NEW
+- **Input Validation** - Comprehensive security and data validation
+- **Error Boundaries** - Graceful error handling and crash prevention
+- **Mobile Responsive** - Optimized for all devices (320px - 1920px+) ✨ NEW
 - **File Upload** - `.txt` and `.pdf` file processing with size limits (10MB)
 - **URL Scraping** - Website content extraction with SSRF protection
 - **Source Management** - Add/remove files and URLs
@@ -128,7 +131,7 @@ Comprehensive documentation is available in the `docs/` folder:
 ### 🚧 Known Limitations
 
 - No user authentication (single-user local app)
-- Mobile responsive layout needs refinement
+- No swipe gestures for sidebar (future enhancement)
 - Limited to 2 file types (txt, pdf - 10MB max)
 - 5MB localStorage limit (can store ~1000 messages)
 - Content limits (500K chars per file, 100K chars per message)
@@ -145,7 +148,7 @@ See **[Development Issue Log](./docs/04-development/dev-issue-log.md)** for deta
 3. ~~**Input Validation**~~ ✅ COMPLETED (Oct 13, 2025)
 4. ~~**UI Layout Improvements**~~ ✅ COMPLETED (Oct 13, 2025)
 5. ~~**Error Boundaries**~~ ✅ COMPLETED (Oct 13, 2025)
-6. **Mobile Responsive Layout** - Auto-close sidebar, touch optimization
+6. ~~**Mobile Responsive Layout**~~ ✅ COMPLETED (Oct 17, 2025)
 
 ### Medium Priority (Enhanced UX)
 6. **Chat History** - Save and load past conversations
@@ -228,13 +231,13 @@ Contributions are welcome! Please see:
 
 | Metric | Value | Last Updated |
 |--------|-------|--------------|
-| **Lines of Code** | ~5,300+ lines | Oct 13, 2025 |
-| **Documentation** | ~9,500+ lines | Oct 13, 2025 |
+| **Lines of Code** | ~6,350+ lines | Oct 17, 2025 |
+| **Documentation** | ~13,500+ lines | Oct 17, 2025 |
 | **Tests** | 65+ tests | Oct 7, 2025 |
 | **Test Coverage** | 42% statements, 57% branches | Oct 7, 2025 |
 | **Components** | 30+ reusable UI components | Oct 13, 2025 |
 | **AI Flows** | 5 Genkit flows | Oct 7, 2025 |
-| **Custom Hooks** | 5 hooks | Oct 13, 2025 |
+| **Custom Hooks** | 5 hooks | Oct 17, 2025 |
 
 ---
 
@@ -256,8 +259,20 @@ Built with:
 
 ## 🆕 Recent Updates
 
+### October 17, 2025
+- ✅ **Mobile Responsive Layout** - Complete mobile optimization ✨ NEW
+  - Auto-close sidebar after adding files/URLs on mobile
+  - Touch-friendly interactions (44px minimum touch targets)
+  - Responsive message bubbles (85% width on mobile)
+  - Mobile-optimized padding and spacing
+  - iOS Safari input zoom prevention (16px font-size)
+  - Smooth momentum scrolling on iOS
+  - Enhanced viewport and theme-color meta tags
+  - Consistent focus states for accessibility
+- 📚 **Documentation** - Added [mobile-responsive-layout.md](./docs/04-development/mobile-responsive-layout.md) (1000+ lines)
+
 ### October 13, 2025
-- ✅ **Error Boundaries** - Graceful error handling with recovery ✨ NEW
+- ✅ **Error Boundaries** - Graceful error handling with recovery
   - React Error Boundaries wrap critical sections
   - Custom fallback UI for different components
   - Error logging with localStorage persistence
@@ -288,4 +303,4 @@ Built with:
 
 ---
 
-**Last Updated:** October 13, 2025
+**Last Updated:** October 17, 2025

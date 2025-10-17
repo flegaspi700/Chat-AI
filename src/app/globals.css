@@ -92,3 +92,33 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Mobile optimizations */
+@layer utilities {
+  /* Better touch targets on mobile */
+  .touch-manipulation {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  
+  /* Prevent iOS zoom on input focus */
+  @media screen and (max-width: 768px) {
+    input[type="text"],
+    input[type="url"],
+    input[type="email"],
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+  
+  /* Smooth momentum scrolling on iOS */
+  .overflow-y-auto,
+  .overflow-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Better focus states for accessibility */
+  *:focus-visible {
+    @apply ring-2 ring-ring ring-offset-2 ring-offset-background outline-none;
+  }
+}

@@ -23,6 +23,7 @@ import {
 import { scrapeUrl } from '@/app/actions';
 import { Separator } from './ui/separator';
 import { cn } from '@/lib/utils';
+import { useSidebar } from '@/components/ui/sidebar';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
@@ -37,6 +38,7 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
   const [url, setUrl] = useState('');
   const [isScraping, setIsScraping] = useState(false);
   const { toast } = useToast();
+  const { isMobile, setOpenMobile } = useSidebar();
   
   const urlSources = files.filter(f => f.type === 'url');
   const fileSources = files.filter(f => f.type === 'file');
@@ -93,6 +95,11 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
         description: `Content from "${url}" has been added.`,
       });
       setUrl('');
+      
+      // Auto-close sidebar on mobile after adding URL
+      if (isMobile) {
+        setOpenMobile(false);
+      }
     }
   };
 
@@ -191,6 +198,11 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
           title: 'File attached',
           description: `${selectedFile.name} (${sizeInfo}, ${contentInfo}) is ready for analysis.`,
         });
+        
+        // Auto-close sidebar on mobile after adding file
+        if (isMobile) {
+          setOpenMobile(false);
+        }
       } catch (error) {
         console.error('Error processing file:', error);
         toast({
@@ -229,14 +241,14 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
         />
         <Button
           variant="outline"
-          className="w-full"
+          className="w-full touch-manipulation min-h-[44px]"
           onClick={handleAddUrl}
           disabled={isScraping || !url.trim()}
         >
           {isScraping ? (
-            <Loader2 className="mr-2 animate-spin" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
-            <Link className="mr-2" />
+            <Link className="mr-2 h-4 w-4" />
           )}
           {isScraping ? 'Scraping...' : 'Add URL'}
         </Button>
@@ -260,7 +272,7 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 shrink-0"
+                    className="h-9 w-9 shrink-0 touch-manipulation"
                     onClick={() => removeFile(file.source)}
                     >
                     <Trash2 className="h-4 w-4" />
@@ -292,10 +304,10 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
         />
         <Button
             variant="outline"
-            className="w-full"
+            className="w-full touch-manipulation min-h-[44px]"
             onClick={() => fileInputRef.current?.click()}
         >
-            <Plus className="mr-2" />
+            <Plus className="mr-2 h-4 w-4" />
             Add Files
         </Button>
         <div className="space-y-2">
@@ -318,7 +330,7 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 shrink-0"
+                    className="h-9 w-9 shrink-0 touch-manipulation"
                     onClick={() => removeFile(file.source)}
                     >
                     <Trash2 className="h-4 w-4" />

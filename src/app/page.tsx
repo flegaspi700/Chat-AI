@@ -138,11 +138,11 @@ export default function Home() {
              <SidebarTrigger />
           </ChatHeader>
           <ErrorBoundary FallbackComponent={ChatErrorFallback} resetKeys={[messages.length]}>
-            <div className="flex-1 overflow-y-auto px-4 py-6 md:px-8 lg:px-12 xl:px-16">
+            <div className="flex-1 overflow-y-auto px-3 py-4 sm:px-4 sm:py-6 md:px-8 lg:px-12 xl:px-16">
               <div className="max-w-4xl mx-auto">
                 <ChatMessages messages={messages} hasFiles={files.length > 0} />
               {isStreaming && streamingText && (
-                <div className="flex gap-3 mb-6">
+                <div className="flex gap-2 sm:gap-3 mb-4 sm:mb-6">
                   <div className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full bg-primary">
                     <div className="flex h-full w-full items-center justify-center text-primary-foreground text-sm font-semibold">
                       AI
@@ -160,7 +160,7 @@ export default function Home() {
               </div>
             </div>
           </ErrorBoundary>
-          <div className="px-4 py-4 md:px-8 lg:px-12 xl:px-16 border-t bg-card">
+          <div className="px-3 py-3 sm:px-4 sm:py-4 md:px-8 lg:px-12 xl:px-16 border-t bg-card">
             <div className="max-w-4xl mx-auto">
               <ChatInputForm
                 onSubmit={handleFormSubmit}

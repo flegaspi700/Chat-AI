@@ -33,34 +33,34 @@ export function ChatMessages({ messages, hasFiles }: ChatMessagesProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {messages.map((message) => (
         <div
           key={message.id}
           className={cn(
-            'flex animate-in fade-in items-start gap-4',
+            'flex animate-in fade-in items-start gap-3 md:gap-4',
             message.role === 'user' && 'justify-end'
           )}
         >
           {message.role === 'ai' && (
-            <Avatar className="h-9 w-9 border-2 border-primary">
+            <Avatar className="h-8 w-8 md:h-9 md:w-9 border-2 border-primary shrink-0">
               <AvatarFallback className="bg-primary text-primary-foreground">
-                <Logo className="h-5 w-5" />
+                <Logo className="h-4 w-4 md:h-5 md:w-5" />
               </AvatarFallback>
             </Avatar>
           )}
           <div
             className={cn(
-              'max-w-3xl rounded-lg p-4',
+              'max-w-[85%] sm:max-w-2xl md:max-w-3xl rounded-lg p-3 md:p-4',
               message.role === 'user'
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-secondary text-secondary-foreground border'
             )}
           >
-            <div className="prose prose-sm dark:prose-invert whitespace-pre-wrap break-words" dangerouslySetInnerHTML={{ __html: message.content }} />
+            <div className="prose prose-sm dark:prose-invert whitespace-pre-wrap break-words max-w-none" dangerouslySetInnerHTML={{ __html: message.content }} />
           </div>
           {message.role === 'user' && (
-            <Avatar className="h-9 w-9">
+            <Avatar className="h-8 w-8 md:h-9 md:w-9 shrink-0">
               <AvatarFallback className="bg-secondary text-secondary-foreground">U</AvatarFallback>
             </Avatar>
           )}

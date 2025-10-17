@@ -37,13 +37,13 @@ export function ChatInputForm({ onSubmit, isPending }: ChatInputFormProps) {
           onChange={(e) => setUserInput(e.target.value)}
           onKeyDown={handleKeyDown}
           rows={1}
-          className="min-h-0 w-full resize-none rounded-full border-2 py-3 pl-4 pr-20 transition-all duration-300 focus:py-5"
+          className="min-h-0 w-full resize-none rounded-full border-2 py-3 pl-4 pr-16 sm:pr-20 transition-all duration-300 focus:py-5 text-base"
           disabled={isPending}
         />
         <Button
           type="submit"
           size="icon"
-          className="absolute bottom-2 right-2 rounded-full"
+          className="absolute bottom-2 right-2 rounded-full h-10 w-10 sm:h-10 sm:w-10 touch-manipulation"
           disabled={isPending || !userInput.trim()}
         >
           <SendHorizonal className="h-5 w-5" />
