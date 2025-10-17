@@ -5,11 +5,13 @@ An intelligent chat application built with Next.js 15 and Google Genkit that all
 ## ✨ Features
 
 - **💬 Conversational AI Chat:** Interact with Google Gemini 2.5 Flash to ask questions and get information from your provided sources
+- **📚 Chat History:** Save and load multiple conversations with auto-generated titles ✨ NEW
+- **✨ Content Summaries:** AI-generated summaries for uploaded files and URLs with key points ✨ NEW
 - **⚡ Streaming Responses:** Real-time AI response streaming with animated progress indicator
-- **💾 Auto-Save Everything:** Messages, sources, and themes automatically persist across sessions
+- **💾 Auto-Save Everything:** Messages, sources, themes, and conversations automatically persist across sessions
 - **🔒 Input Validation:** Comprehensive security with file size limits, URL validation, and SSRF protection
 - **🛡️ Error Boundaries:** Graceful error handling with recovery options - prevents app crashes
-- **📱 Mobile Responsive:** Optimized for all devices with touch-friendly interactions and auto-close sidebar ✨ NEW
+- **📱 Mobile Responsive:** Optimized for all devices with touch-friendly interactions and auto-close sidebar
 - **📄 File Uploads:** Upload and process both `.txt` and `.pdf` files (10MB limit) to use as a knowledge base
 - **🌐 Website Scraping:** Provide any website URL, and the application will scrape its content to use as a source
 - **📊 Source Management:** Clean sidebar interface to easily add, view, and remove your files and URL sources
@@ -117,14 +119,16 @@ Comprehensive documentation is available in the `docs/` folder:
 ### ✅ What's Working (Oct 17, 2025)
 
 - **Chat Interface** - Full conversational AI with context from sources
+- **Chat History** - Save, load, and manage multiple conversations ✨ NEW
+- **Content Summaries** - AI-generated summaries for files and URLs ✨ NEW
 - **Response Streaming** - Real-time token-by-token AI responses
-- **Data Persistence** - Auto-save/restore messages, sources, and themes
+- **Data Persistence** - Auto-save/restore messages, sources, themes, and conversations
 - **Input Validation** - Comprehensive security and data validation
 - **Error Boundaries** - Graceful error handling and crash prevention
-- **Mobile Responsive** - Optimized for all devices (320px - 1920px+) ✨ NEW
+- **Mobile Responsive** - Optimized for all devices (320px - 1920px+)
 - **File Upload** - `.txt` and `.pdf` file processing with size limits (10MB)
 - **URL Scraping** - Website content extraction with SSRF protection
-- **Source Management** - Add/remove files and URLs
+- **Source Management** - Add/remove files and URLs with summary generation
 - **Theme System** - Dark/light mode + AI-generated themes
 - **Testing** - 65+ tests, 42% coverage
 
@@ -151,18 +155,26 @@ See **[Development Issue Log](./docs/04-development/dev-issue-log.md)** for deta
 6. ~~**Mobile Responsive Layout**~~ ✅ COMPLETED (Oct 17, 2025)
 
 ### Medium Priority (Enhanced UX)
-6. **Chat History** - Save and load past conversations
-7. **Content Summaries** - AI-generated summaries for uploaded sources
-8. **Export Conversations** - Download chat history as PDF/TXT
-9. **Keyboard Shortcuts** - More productivity shortcuts
-10. **Advanced Search** - Search within conversations
+7. ~~**Chat History**~~ ✅ COMPLETED (Oct 17, 2025) - Save and load past conversations
+8. ~~**Content Summaries**~~ ✅ COMPLETED (Oct 17, 2025) - AI-generated summaries for uploaded sources
+9. **Export Conversations** - Download chat history as PDF/TXT
+10. **Keyboard Shortcuts** - More productivity shortcuts
+11. **Advanced Search** - Search within conversations
+
+### Polish & Documentation
+12. **Screenshots & Media** - Add screenshots to README and documentation
+13. **Demo Video/GIF** - Create visual walkthrough of features
+14. **Deployment Guide** - Step-by-step deployment instructions (Vercel, Netlify, Azure)
+15. **Contributing Guidelines** - Detailed contribution workflow and standards
+16. **API Documentation** - Document Genkit flows and server actions
+17. **Architecture Diagrams** - Visual representation of app structure
 
 ### Low Priority (Future Features)
-11. **User Authentication** - Multi-user support with accounts
-12. **More File Types** - `.docx`, `.csv`, `.md`, images support
-13. **Multi-Model Support** - Switch between AI models
-14. **Collaborative Features** - Share conversations, team workspaces
-15. **Voice Integration** - Speech-to-text and text-to-speech
+18. **User Authentication** - Multi-user support with accounts
+19. **More File Types** - `.docx`, `.csv`, `.md`, images support
+20. **Multi-Model Support** - Switch between AI models
+21. **Collaborative Features** - Share conversations, team workspaces
+22. **Voice Integration** - Speech-to-text and text-to-speech
 
 **See detailed roadmap:** [Daily Logs](./docs/daily-logs/2025-10-07-summary.md#next-steps-future-sessions)
 
@@ -231,12 +243,12 @@ Contributions are welcome! Please see:
 
 | Metric | Value | Last Updated |
 |--------|-------|--------------|
-| **Lines of Code** | ~6,350+ lines | Oct 17, 2025 |
-| **Documentation** | ~13,500+ lines | Oct 17, 2025 |
+| **Lines of Code** | ~6,700+ lines | Oct 17, 2025 |
+| **Documentation** | ~17,000+ lines | Oct 17, 2025 |
 | **Tests** | 65+ tests | Oct 7, 2025 |
 | **Test Coverage** | 42% statements, 57% branches | Oct 7, 2025 |
-| **Components** | 30+ reusable UI components | Oct 13, 2025 |
-| **AI Flows** | 5 Genkit flows | Oct 7, 2025 |
+| **Components** | 32+ reusable UI components | Oct 17, 2025 |
+| **AI Flows** | 6 Genkit flows | Oct 17, 2025 |
 | **Custom Hooks** | 5 hooks | Oct 17, 2025 |
 
 ---
@@ -259,8 +271,27 @@ Built with:
 
 ## 🆕 Recent Updates
 
-### October 17, 2025
-- ✅ **Mobile Responsive Layout** - Complete mobile optimization ✨ NEW
+### October 17, 2025 (Afternoon Session)
+- ✅ **Chat History Management** - Complete conversation management system ✨ NEW
+  - Save and load multiple conversations
+  - Auto-generated conversation titles from first message
+  - Smart sorting by recent activity
+  - Delete conversations with confirmation
+  - Seamless conversation switching
+  - Timestamps and message counts
+  - Auto-save on every change
+- ✅ **Content Summaries** - AI-powered source summaries ✨ NEW
+  - Generate 200-300 word summaries for any source
+  - 3-5 key points extraction
+  - Collapsible summary display
+  - One-click generation with sparkle icon
+  - Persistent storage with sources
+  - New Genkit flow for summarization
+- 📚 **Documentation** - Added [chat-history-content-summaries.md](./docs/04-development/chat-history-content-summaries.md) (3500+ lines)
+- 🎨 **UI Enhancements** - New conversation history sidebar and enhanced source cards
+
+### October 17, 2025 (Morning Session)
+- ✅ **Mobile Responsive Layout** - Complete mobile optimization
   - Auto-close sidebar after adding files/URLs on mobile
   - Touch-friendly interactions (44px minimum touch targets)
   - Responsive message bubbles (85% width on mobile)

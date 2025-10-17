@@ -1,14 +1,16 @@
 /**
  * localStorage utilities for persisting application state
- * Handles messages, sources, and AI themes with error handling
+ * Handles messages, sources, AI themes, and conversations with error handling
  */
 
-import type { Message, FileInfo, AITheme } from './types';
+import type { Message, FileInfo, AITheme, Conversation } from './types';
 
 const STORAGE_KEYS = {
   MESSAGES: 'notechat-messages',
   SOURCES: 'notechat-sources',
   AI_THEME: 'notechat-ai-theme',
+  CONVERSATIONS: 'notechat-conversations',
+  CURRENT_CONVERSATION_ID: 'notechat-current-conversation-id',
 } as const;
 
 /**
@@ -131,7 +133,8 @@ export function clearAllData(): boolean {
   return (
     clearMessages() &&
     clearSources() &&
-    clearAITheme()
+    clearAITheme() &&
+    clearConversations()
   );
 }
 
@@ -175,4 +178,127 @@ function formatBytes(bytes: number): string {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   
   return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+// ============================================
+// Conversation History
+// ============================================
+
+/**
+ * Generate a title from the first message
+ */
+function generateConversationTitle(messages: Message[]): string {
+  if (messages.length === 0) return 'New Conversation';
+  
+  const firstUserMessage = messages.find(m => m.role === 'user');
+  if (!firstUserMessage) return 'New Conversation';
+  
+  // Take first 50 characters of the first user message
+  const title = firstUserMessage.content.slice(0, 50);
+  return title.length < firstUserMessage.content.length ? `${title}...` : title;
+}
+
+/**
+ * Save a conversation
+ */
+export function saveConversation(conversation: Conversation): boolean {
+  const conversations = loadConversations();
+  const existingIndex = conversations.findIndex(c => c.id === conversation.id);
+  
+  if (existingIndex >= 0) {
+    // Update existing conversation
+    conversations[existingIndex] = {
+      ...conversation,
+      updatedAt: Date.now(),
+    };
+  } else {
+    // Add new conversation
+    conversations.push(conversation);
+  }
+  
+  return setItem(STORAGE_KEYS.CONVERSATIONS, conversations);
+}
+
+/**
+ * Load all conversations (sorted by updatedAt descending)
+ */
+export function loadConversations(): Conversation[] {
+  const conversations = getItem<Conversation[]>(STORAGE_KEYS.CONVERSATIONS) || [];
+  return conversations.sort((a, b) => b.updatedAt - a.updatedAt);
+}
+
+/**
+ * Load a specific conversation by ID
+ */
+export function loadConversation(id: string): Conversation | null {
+  const conversations = loadConversations();
+  return conversations.find(c => c.id === id) || null;
+}
+
+/**
+ * Delete a conversation
+ */
+export function deleteConversation(id: string): boolean {
+  const conversations = loadConversations();
+  const filtered = conversations.filter(c => c.id !== id);
+  return setItem(STORAGE_KEYS.CONVERSATIONS, filtered);
+}
+
+/**
+ * Create a new conversation from current state
+ */
+export function createConversation(
+  messages: Message[],
+  sources: FileInfo[],
+  aiTheme?: AITheme,
+  title?: string
+): Conversation {
+  return {
+    id: `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    title: title || generateConversationTitle(messages),
+    messages,
+    sources,
+    aiTheme,
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+}
+
+/**
+ * Set the current conversation ID
+ */
+export function setCurrentConversationId(id: string | null): boolean {
+  if (id === null) {
+    return removeItem(STORAGE_KEYS.CURRENT_CONVERSATION_ID);
+  }
+  return setItem(STORAGE_KEYS.CURRENT_CONVERSATION_ID, id);
+}
+
+/**
+ * Get the current conversation ID
+ */
+export function getCurrentConversationId(): string | null {
+  return getItem<string>(STORAGE_KEYS.CURRENT_CONVERSATION_ID);
+}
+
+/**
+ * Update conversation title
+ */
+export function updateConversationTitle(id: string, title: string): boolean {
+  const conversations = loadConversations();
+  const conversation = conversations.find(c => c.id === id);
+  
+  if (!conversation) return false;
+  
+  conversation.title = title;
+  conversation.updatedAt = Date.now();
+  
+  return setItem(STORAGE_KEYS.CONVERSATIONS, conversations);
+}
+
+/**
+ * Clear all conversations
+ */
+export function clearConversations(): boolean {
+  return removeItem(STORAGE_KEYS.CONVERSATIONS) && removeItem(STORAGE_KEYS.CURRENT_CONVERSATION_ID);
 }

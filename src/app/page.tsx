@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { FileInfo, Message } from '@/lib/types';
+import type { FileInfo, Message, Conversation } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { ChatHeader } from '@/components/chat-header';
 import { ChatMessages, ChatMessagesSkeleton } from '@/components/chat-messages';
@@ -13,9 +13,22 @@ import {
   SidebarInset,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileUpload } from '@/components/file-upload';
+import { ConversationHistory } from '@/components/conversation-history';
+import { Separator } from '@/components/ui/separator';
 import type { AITheme } from '@/lib/types';
-import { loadMessages, loadSources, loadAITheme } from '@/lib/storage';
+import { 
+  loadMessages, 
+  loadSources, 
+  loadAITheme,
+  createConversation,
+  saveConversation,
+  getCurrentConversationId,
+  setCurrentConversationId,
+  updateConversationTitle,
+  loadConversation,
+} from '@/lib/storage';
 import { useMessagesPersistence, useSourcesPersistence, useAIThemePersistence } from '@/hooks/use-persistence';
 import { useStreamingResponse } from '@/hooks/use-streaming';
 import { validateMessageLength } from '@/lib/validation';
@@ -28,6 +41,9 @@ export default function Home() {
   const [aiTheme, setAiTheme] = useState<AITheme | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
+  const [currentConversationId, setCurrentConversationIdState] = useState<string | null>(null);
+  const [conversationTitle, setConversationTitle] = useState<string>('New Conversation');
+  const [activeTab, setActiveTab] = useState<string>('conversations');
   const { toast } = useToast();
   const { streamingText, isStreaming, streamResponse, reset } = useStreamingResponse();
 
@@ -36,6 +52,7 @@ export default function Home() {
     const savedMessages = loadMessages();
     const savedSources = loadSources();
     const savedTheme = loadAITheme();
+    const savedConversationId = getCurrentConversationId();
     
     if (savedMessages.length > 0) {
       setMessages(savedMessages);
@@ -48,6 +65,17 @@ export default function Home() {
     }
     
     setIsLoaded(true);
+    
+    // Load current conversation ID and title
+    setCurrentConversationIdState(savedConversationId);
+    
+    // Load conversation title if we have a saved conversation
+    if (savedConversationId) {
+      const savedConversation = loadConversation(savedConversationId);
+      if (savedConversation) {
+        setConversationTitle(savedConversation.title);
+      }
+    }
     
     // Show welcome back message if there's saved data
     if (savedMessages.length > 0 || savedSources.length > 0) {
@@ -62,6 +90,93 @@ export default function Home() {
   useMessagesPersistence(messages);
   useSourcesPersistence(files);
   useAIThemePersistence(aiTheme);
+
+  // Auto-save conversation when messages or sources change
+  useEffect(() => {
+    if (messages.length > 0 && isLoaded) {
+      const conversation = createConversation(messages, files, aiTheme || undefined);
+      
+      // If we don't have a current conversation ID, set it
+      if (!currentConversationId) {
+        setCurrentConversationIdState(conversation.id);
+        setCurrentConversationId(conversation.id);
+        setConversationTitle(conversation.title); // Set auto-generated title
+      } else {
+        // Update existing conversation with current ID and title
+        conversation.id = currentConversationId;
+        conversation.title = conversationTitle; // Preserve user's title
+      }
+      
+      saveConversation(conversation);
+    }
+  }, [messages, files, aiTheme, currentConversationId, conversationTitle, isLoaded]);
+
+  const handleNewConversation = () => {
+    // Save current conversation before creating new one
+    if (messages.length > 0) {
+      const conversation = createConversation(messages, files, aiTheme || undefined);
+      if (currentConversationId) {
+        conversation.id = currentConversationId;
+        conversation.title = conversationTitle; // Preserve title
+      }
+      saveConversation(conversation);
+    }
+    
+    // Clear current state
+    setMessages([]);
+    setFiles([]);
+    setAiTheme(null);
+    setCurrentConversationIdState(null);
+    setCurrentConversationId(null);
+    setConversationTitle('New Conversation');
+    
+    // Switch to sources tab if no sources
+    if (files.length === 0) {
+      setActiveTab('sources');
+    }
+    
+    toast({
+      title: 'New Conversation',
+      description: 'Started a new conversation. Add sources or start chatting!',
+    });
+  };
+
+  const handleLoadConversation = (conversation: Conversation) => {
+    // Save current conversation before loading new one
+    if (messages.length > 0 && currentConversationId) {
+      const currentConversation = createConversation(messages, files, aiTheme || undefined);
+      currentConversation.id = currentConversationId;
+      currentConversation.title = conversationTitle; // Preserve current title
+      saveConversation(currentConversation);
+    }
+    
+    // Load selected conversation
+    setMessages(conversation.messages);
+    setFiles(conversation.sources);
+    setAiTheme(conversation.aiTheme || null);
+    setCurrentConversationIdState(conversation.id);
+    setCurrentConversationId(conversation.id);
+    setConversationTitle(conversation.title);
+    
+    toast({
+      title: 'Conversation Loaded',
+      description: `Loaded "${conversation.title}"`,
+    });
+  };
+
+  const handleTitleChange = (newTitle: string) => {
+    setConversationTitle(newTitle);
+    
+    // Update in storage if we have a conversation ID
+    if (currentConversationId) {
+      updateConversationTitle(currentConversationId, newTitle);
+      
+      toast({
+        title: 'Title Updated',
+        description: `Conversation renamed to "${newTitle}"`,
+      });
+    }
+  };
 
   const handleClearData = () => {
     setMessages([]);
@@ -125,16 +240,43 @@ export default function Home() {
       <ErrorBoundary FallbackComponent={SidebarErrorFallback}>
         <Sidebar>
           <SidebarHeader>
-            <h2 className="text-lg font-semibold font-headline">Sources</h2>
+            <h2 className="text-lg font-semibold font-headline">FileChat AI</h2>
           </SidebarHeader>
-          <SidebarContent>
-            <FileUpload files={files} setFiles={setFiles} aiTheme={aiTheme} />
+          <SidebarContent className="p-0">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
+              <TabsList className="w-full grid grid-cols-2 rounded-none border-b">
+                <TabsTrigger value="conversations" className="rounded-none">
+                  Conversations
+                </TabsTrigger>
+                <TabsTrigger value="sources" className="rounded-none">
+                  Sources
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="conversations" className="flex-1 m-0 overflow-hidden">
+                <ConversationHistory
+                  onNewConversation={handleNewConversation}
+                  onLoadConversation={handleLoadConversation}
+                  currentConversationId={currentConversationId}
+                />
+              </TabsContent>
+              
+              <TabsContent value="sources" className="flex-1 m-0 overflow-auto">
+                <FileUpload files={files} setFiles={setFiles} aiTheme={aiTheme} />
+              </TabsContent>
+            </Tabs>
           </SidebarContent>
         </Sidebar>
       </ErrorBoundary>
       <SidebarInset>
         <main className="flex flex-col h-screen bg-background">
-          <ChatHeader setAiTheme={setAiTheme} onClearData={handleClearData}>
+          <ChatHeader 
+            setAiTheme={setAiTheme} 
+            onClearData={handleClearData}
+            conversationTitle={conversationTitle}
+            onTitleChange={handleTitleChange}
+            isNewConversation={!currentConversationId || messages.length === 0}
+          >
              <SidebarTrigger />
           </ChatHeader>
           <ErrorBoundary FallbackComponent={ChatErrorFallback} resetKeys={[messages.length]}>

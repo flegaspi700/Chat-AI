@@ -9,10 +9,21 @@ export type FileInfo = {
   content: string;
   type: 'file' | 'url';
   source: string;
+  summary?: string; // AI-generated summary of the content
 };
 
 export type AITheme = {
   id: string;
   name: string;
   imageHint: string;
+};
+
+export type Conversation = {
+  id: string;
+  title: string;
+  messages: Message[];
+  sources: FileInfo[];
+  aiTheme?: AITheme;
+  createdAt: number;
+  updatedAt: number;
 };

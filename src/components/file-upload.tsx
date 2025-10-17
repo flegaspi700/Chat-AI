@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import * as pdfjsLib from 'pdfjs-dist';
-import { FileText, Link, Plus, Trash2, Loader2 } from 'lucide-react';
+import { Link, Plus, Loader2 } from 'lucide-react';
 import { FileInfo, AITheme } from '@/lib/types';
 import { 
   validateFile, 
@@ -15,15 +15,11 @@ import {
   formatContentLength,
   VALIDATION_LIMITS 
 } from '@/lib/validation';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { scrapeUrl } from '@/app/actions';
 import { Separator } from './ui/separator';
 import { cn } from '@/lib/utils';
 import { useSidebar } from '@/components/ui/sidebar';
+import { SourceCard } from '@/components/source-card';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
@@ -222,6 +218,14 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
     setFiles(files.filter(f => f.source !== source));
   };
 
+  const handleUpdateSummary = (source: string, summary: string) => {
+    setFiles(prev =>
+      prev.map(f =>
+        f.source === source ? { ...f, summary } : f
+      )
+    );
+  };
+
   return (
     <div
       className={cn('p-4 space-y-4 transition-all duration-500', aiTheme && 'bg-cover bg-center')}
@@ -258,32 +262,12 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
                 No URLs added.
             </p>
             ) : urlSources.map(file => (
-            <div
+              <SourceCard
                 key={file.source}
-                className="flex items-center gap-2 rounded-lg border bg-card/80 backdrop-blur-sm p-3 text-sm hover:bg-card transition-colors"
-            >
-                <Link className="h-4 w-4 text-primary shrink-0" />
-                <span className="flex-1 truncate font-medium text-sm" title={file.name}>
-                {file.name}
-                </span>
-                <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="h-9 w-9 shrink-0 touch-manipulation"
-                    onClick={() => removeFile(file.source)}
-                    >
-                    <Trash2 className="h-4 w-4" />
-                    <span className="sr-only">Remove</span>
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>Remove {file.name}</p>
-                </TooltipContent>
-                </Tooltip>
-            </div>
+                file={file}
+                onRemove={removeFile}
+                onUpdateSummary={handleUpdateSummary}
+              />
             ))}
         </div>
       </div>
@@ -316,32 +300,12 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
                 No files added.
             </p>
             ) : fileSources.map(file => (
-            <div
+              <SourceCard
                 key={file.source}
-                className="flex items-center gap-2 rounded-lg border bg-card/80 backdrop-blur-sm p-3 text-sm hover:bg-card transition-colors"
-            >
-                <FileText className="h-4 w-4 text-primary shrink-0" />
-                <span className="flex-1 truncate font-medium text-sm" title={file.name}>
-                {file.name}
-                </span>
-                <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="h-9 w-9 shrink-0 touch-manipulation"
-                    onClick={() => removeFile(file.source)}
-                    >
-                    <Trash2 className="h-4 w-4" />
-                    <span className="sr-only">Remove</span>
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>Remove {file.name}</p>
-                </TooltipContent>
-                </Tooltip>
-            </div>
+                file={file}
+                onRemove={removeFile}
+                onUpdateSummary={handleUpdateSummary}
+              />
             ))}
         </div>
       </div>
