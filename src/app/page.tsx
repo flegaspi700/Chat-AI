@@ -16,7 +16,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileUpload } from '@/components/file-upload';
 import { ConversationHistory } from '@/components/conversation-history';
-import { Separator } from '@/components/ui/separator';
 import type { AITheme } from '@/lib/types';
 import { 
   loadMessages, 
@@ -40,6 +39,7 @@ export default function Home() {
   const [pending, setPending] = useState(false);
   const [aiTheme, setAiTheme] = useState<AITheme | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
   const [currentConversationId, setCurrentConversationIdState] = useState<string | null>(null);
   const [conversationTitle, setConversationTitle] = useState<string>('New Conversation');

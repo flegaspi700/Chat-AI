@@ -70,7 +70,7 @@ export function validateFileType(file: File): ValidationResult {
   const extension = '.' + file.name.split('.').pop()?.toLowerCase();
   
   // Check extension
-  if (!VALIDATION_LIMITS.ALLOWED_FILE_TYPES.includes(extension as any)) {
+  if (!VALIDATION_LIMITS.ALLOWED_FILE_TYPES.includes(extension as '.txt' | '.pdf')) {
     return {
       isValid: false,
       error: `Invalid file type: ${extension}`,
@@ -260,7 +260,7 @@ export function validateURL(urlString: string): URLValidationResult {
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(trimmedUrl);
-  } catch (error) {
+  } catch {
     return {
       isValid: false,
       error: 'Invalid URL format',
@@ -280,7 +280,7 @@ export function validateURL(urlString: string): URLValidationResult {
   }
 
   // Check for blocked protocols (XSS protection)
-  if (BLOCKED_PROTOCOLS.includes(protocol as any)) {
+  if (BLOCKED_PROTOCOLS.includes(protocol as typeof BLOCKED_PROTOCOLS[number])) {
     return {
       isValid: false,
       error: 'Blocked protocol',

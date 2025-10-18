@@ -48,7 +48,7 @@ export default function Error({
             Oops! Something went wrong
           </h1>
           <p className="text-muted-foreground">
-            We encountered an unexpected error. Don't worry, your data is safe.
+            We encountered an unexpected error. Don&apos;t worry, your data is safe.
           </p>
         </div>
 

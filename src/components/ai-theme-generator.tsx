@@ -28,7 +28,7 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
   const [open, setOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const { theme, setTheme, themes, resolvedTheme } = useTheme();
+  const { setTheme, themes, resolvedTheme } = useTheme();
   const { toast } = useToast();
 
   const handleGenerate = async () => {
@@ -88,13 +88,13 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
 
     // Update next-themes by adding the new theme to the list and setting it
     if (!themes.includes(themeId)) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const newThemes = [...themes, themeId];
-        // @ts-ignore - a known issue with next-themes, this forces a re-render.
+        // Force re-render with theme switches (known next-themes workaround)
         setTheme('light'); 
-        // @ts-ignore
         setTheme('dark');
         setTimeout(() => {
-            // @ts-ignore
+            // @ts-expect-error - resolvedTheme may not be a valid theme string
             setTheme(resolvedTheme);
             setTheme(themeId)
         }, 10)
@@ -128,7 +128,7 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
           <DialogTitle>Generate a New Theme</DialogTitle>
           <DialogDescription>
             Describe the look and feel of the theme you want to create. For
-            example, "a calm, oceanic theme with blues and greens".
+            example, &quot;a calm, oceanic theme with blues and greens&quot;.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">

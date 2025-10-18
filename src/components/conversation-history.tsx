@@ -14,7 +14,6 @@ import type { Conversation } from '@/lib/types';
 import {
   loadConversations,
   deleteConversation,
-  getCurrentConversationId,
 } from '@/lib/storage';
 
 interface ConversationHistoryProps {

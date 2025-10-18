@@ -152,7 +152,7 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps): JSX.El
       <h2 className="text-2xl font-bold mb-2">Something went wrong</h2>
       
       <p className="text-muted-foreground mb-6 max-w-md">
-        We encountered an unexpected error. Don't worry, your data is safe.
+        We encountered an unexpected error. Don&apos;t worry, your data is safe.
         Try refreshing or contact support if the problem persists.
       </p>
 
@@ -209,7 +209,7 @@ export function MinimalErrorFallback({ error, resetError }: ErrorFallbackProps):
 /**
  * Chat-specific Error Fallback
  */
-export function ChatErrorFallback({ error, resetError }: ErrorFallbackProps): JSX.Element {
+export function ChatErrorFallback({ resetError }: ErrorFallbackProps): JSX.Element {
   return (
     <div className="flex flex-col items-center justify-center h-full p-8 text-center">
       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 mb-4">

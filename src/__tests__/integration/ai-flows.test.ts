@@ -98,7 +98,7 @@ describe('AI Flow Integration Tests', () => {
       const result = await answerQuestionsFromFile({
         question: 'What is this?',
         fileContent: '',
-      }).catch((error) => ({ answer: 'Unable to process empty file.', error: true }));
+      }).catch(() => ({ answer: 'Unable to process empty file.', error: true }));
 
       expect(result).toBeDefined();
     });
@@ -133,7 +133,7 @@ describe('AI Flow Integration Tests', () => {
 
       const result = await scrapeWebsite({
         url: 'https://invalid-url.com',
-      }).catch((error) => ({ 
+      }).catch(() => ({ 
         error: 'Failed to scrape website',
         url: 'https://invalid-url.com',
       }));
@@ -223,7 +223,7 @@ describe('AI Flow Integration Tests', () => {
       const result = await generateChatbotResponse({
         userInput: '',
         fileContent: undefined,
-      }).catch((error) => ({ error: 'Empty message not allowed' }));
+      }).catch(() => ({ error: 'Empty message not allowed' }));
 
       expect(result).toBeDefined();
     });

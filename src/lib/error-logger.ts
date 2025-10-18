@@ -13,7 +13,7 @@ export interface ErrorContext {
   timestamp?: string;
   url?: string;
   userAgent?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface ErrorLog {

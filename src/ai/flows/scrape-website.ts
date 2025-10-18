@@ -65,9 +65,10 @@ const scrapeWebsiteFlow = ai.defineFlow(
         title,
         content,
       };
-    } catch (e: any) {
+    } catch (e) {
+      const error = e as Error;
       console.error(`Error scraping ${url}:`, e);
-      throw new Error(`Failed to fetch or parse content from URL: ${e.message}`);
+      throw new Error(`Failed to fetch or parse content from URL: ${error.message}`);
     }
   }
 );

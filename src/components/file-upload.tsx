@@ -13,7 +13,6 @@ import {
   validateFileContent,
   formatFileSize, 
   formatContentLength,
-  VALIDATION_LIMITS 
 } from '@/lib/validation';
 import { scrapeUrl } from '@/app/actions';
 import { Separator } from './ui/separator';
