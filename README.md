@@ -20,7 +20,7 @@ An intelligent AI-powered chat application built with Next.js 15 and Google Gemi
 - **🎨 AI-Powered Theme Generation:** Dynamically create and apply color themes based on a text prompt
 - **🌙 Dark/Light Mode:** Quick theme toggle with keyboard shortcut (`Ctrl+Shift+T`)
 - **📱 Responsive Design:** Modern, responsive UI that works across different screen sizes
-- **✅ Fully Tested:** 65+ tests with Jest and Playwright (42% coverage)
+- **✅ Comprehensive Testing:** 93 tests with Jest and Playwright (47% coverage, actively improving)
 
 ## 🚀 Getting Started
 

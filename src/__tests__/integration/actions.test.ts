@@ -31,7 +31,7 @@ describe('Server Actions', () => {
     it('returns error for empty input', async () => {
       const result = await getAIResponse('', undefined);
       
-      expect(result.error).toBe('User input is empty.');
+      expect(result.error).toBe('Please enter a message before submitting.');
       expect(result.response).toBeUndefined();
     });
 
@@ -64,7 +64,7 @@ describe('Server Actions', () => {
     it('returns error for empty URL', async () => {
       const result = await scrapeUrl('');
       
-      expect(result.error).toBe('URL is empty.');
+      expect(result.error).toBe('Please enter a valid URL (e.g., https://example.com)');
     });
 
     it('handles scraping errors', async () => {
