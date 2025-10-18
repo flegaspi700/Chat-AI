@@ -35,7 +35,7 @@ We've transformed the documentation from a flat, disorganized collection of 17 f
 ## 📁 Final Documentation Structure
 
 ```
-NoteChat-AI/
+DocuNote/
 ├── README.md                          # ⭐ Main project README (updated)
 ├── TESTING-README.md                  # Quick testing reference
 │

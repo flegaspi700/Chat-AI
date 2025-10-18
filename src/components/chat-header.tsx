@@ -29,7 +29,7 @@ export function ChatHeader({
         <Logo className="h-6 w-6" />
       </div>
       <div className="flex-1 flex flex-col min-w-0">
-        <h1 className="text-lg font-bold font-headline">FileChat AI</h1>
+        <h1 className="text-lg font-bold font-headline">📄 DocuNote</h1>
         {onTitleChange ? (
           <ConversationTitle
             title={conversationTitle}
@@ -37,7 +37,7 @@ export function ChatHeader({
             isNewConversation={isNewConversation}
           />
         ) : (
-          <p className="text-sm text-muted-foreground">Chat with your documents</p>
+          <p className="text-sm text-muted-foreground">Turn documents into conversations</p>
         )}
       </div>
       <ThemeToggleButton />

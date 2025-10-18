@@ -36,7 +36,7 @@ Add a **dedicated theme toggle button** next to the Settings button for quick ac
 ```
 Header Layout:
 ┌─────────────────────────────────────────────────────────┐
-│ [☰] [Logo] FileChat AI                  [🌙] [⚙️]      │
+│ [☰] [Logo] DocuNote                     [🌙] [⚙️]      │
 │         Chat with your documents                        │
 └─────────────────────────────────────────────────────────┘
 ```
@@ -105,7 +105,7 @@ export function ChatHeader({ children, setAiTheme }: ChatHeaderProps) {
         <Logo className="h-6 w-6" />
       </div>
       <div className="flex-1 flex flex-col">
-        <h1 className="text-lg font-bold font-headline">FileChat AI</h1>
+        <h1 className="text-lg font-bold font-headline">DocuNote</h1>
         <p className="text-sm text-muted-foreground">Chat with your documents</p>
       </div>
       {/* New quick toggle */}
@@ -275,13 +275,13 @@ Bottom Right:
 
 **Before:**
 ```
-[Logo] FileChat AI                              [⚙️]
+[Logo] DocuNote                                 [⚙️]
        Chat with your documents
 ```
 
 **After:**
 ```
-[Logo] FileChat AI                         [🌙] [⚙️]
+[Logo] DocuNote                            [🌙] [⚙️]
        Chat with your documents
 ```
 

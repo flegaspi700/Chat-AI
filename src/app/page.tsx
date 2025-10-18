@@ -240,7 +240,7 @@ export default function Home() {
       <ErrorBoundary FallbackComponent={SidebarErrorFallback}>
         <Sidebar>
           <SidebarHeader>
-            <h2 className="text-lg font-semibold font-headline">FileChat AI</h2>
+            <h2 className="text-lg font-semibold font-headline">DocuNote</h2>
           </SidebarHeader>
           <SidebarContent className="p-0">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">

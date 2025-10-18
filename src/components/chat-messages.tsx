@@ -24,7 +24,7 @@ export function ChatMessages({ messages, hasFiles }: ChatMessagesProps) {
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
           <Logo className="h-8 w-8 text-primary" />
         </div>
-        <h2 className="text-2xl font-headline font-semibold">Welcome to FileChat AI</h2>
+        <h2 className="text-2xl font-headline font-semibold">Welcome to DocuNote</h2>
         <p className="max-w-md text-muted-foreground">
           {hasFiles ? 'Your files are ready. Ask a question to get started.' : 'Upload a TXT or PDF file and start asking questions to get insights from your document.'}
         </p>

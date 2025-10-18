@@ -1,8 +1,8 @@
-# Getting Started with FileChat AI
+# Getting Started with DocuNote
 
-## 🎯 What is FileChat AI?
+## 🎯 What is DocuNote?
 
-FileChat AI is a Next.js 15 application that lets you chat with your documents and websites using AI.
+DocuNote is a Next.js 15 application that turns documents into conversations. Upload files, scrape websites, and chat with AI about your content.
 
 ## ✨ Key Features
 
@@ -16,8 +16,8 @@ FileChat AI is a Next.js 15 application that lets you chat with your documents a
 
 1. **Clone and install**
    ```bash
-   git clone <repository-url>
-   cd NoteChat-AI
+   git clone https://github.com/flegaspi700/DocuNote.git
+   cd DocuNote
    npm install
    ```
 

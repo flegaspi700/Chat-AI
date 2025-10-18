@@ -1,6 +1,8 @@
-# FileChat AI
+# 📄 DocuNote
 
-An intelligent chat application built with Next.js 15 and Google Genkit that allows you to get insights from your documents and websites. Upload files or provide URLs and start asking questions!
+**Turn documents into conversations**
+
+An intelligent AI-powered chat application built with Next.js 15 and Google Gemini that lets you upload files, scrape websites, and have natural conversations about your content—with automatic summaries and complete conversation history.
 
 ## ✨ Features
 
@@ -31,8 +33,8 @@ An intelligent chat application built with Next.js 15 and Google Genkit that all
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository-url>
-    cd NoteChat-AI
+    git clone https://github.com/flegaspi700/DocuNote.git
+    cd DocuNote
     ```
 
 2.  **Install Dependencies:**
@@ -161,6 +163,13 @@ See **[Development Issue Log](./docs/04-development/dev-issue-log.md)** for deta
 10. **Keyboard Shortcuts** - More productivity shortcuts
 11. **Advanced Search** - Search within conversations
 
+### Low Priority (Future Features)
+18. **User Authentication** - Multi-user support with accounts
+19. **More File Types** - `.docx`, `.csv`, `.md`, images support
+20. **Multi-Model Support** - Switch between AI models
+21. **Collaborative Features** - Share conversations, team workspaces
+22. **Voice Integration** - Speech-to-text and text-to-speech
+
 ### Polish & Documentation
 12. **Screenshots & Media** - Add screenshots to README and documentation
 13. **Demo Video/GIF** - Create visual walkthrough of features
@@ -168,13 +177,6 @@ See **[Development Issue Log](./docs/04-development/dev-issue-log.md)** for deta
 15. **Contributing Guidelines** - Detailed contribution workflow and standards
 16. **API Documentation** - Document Genkit flows and server actions
 17. **Architecture Diagrams** - Visual representation of app structure
-
-### Low Priority (Future Features)
-18. **User Authentication** - Multi-user support with accounts
-19. **More File Types** - `.docx`, `.csv`, `.md`, images support
-20. **Multi-Model Support** - Switch between AI models
-21. **Collaborative Features** - Share conversations, team workspaces
-22. **Voice Integration** - Speech-to-text and text-to-speech
 
 **See detailed roadmap:** [Daily Logs](./docs/daily-logs/2025-10-07-summary.md#next-steps-future-sessions)
 

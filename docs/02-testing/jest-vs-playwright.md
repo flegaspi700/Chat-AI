@@ -1,7 +1,7 @@
-# Jest vs Playwright: Testing Strategy for NoteChat-AI
+# Jest vs Playwright: Testing Strategy for DocuNote
 
-**Last Updated:** October 7, 2025  
-**Project:** NoteChat-AI (FileChat AI)  
+**Last Updated:** October 18, 2025  
+**Project:** DocuNote (formerly FileChat AI / NoteChat-AI)  
 **Author:** Development Team
 
 ---
@@ -21,7 +21,7 @@
 
 ## Overview
 
-NoteChat-AI uses a **two-tier testing strategy** to ensure code quality and user experience:
+DocuNote uses a **two-tier testing strategy** to ensure code quality and user experience:
 
 - **Jest** - Fast, isolated unit and integration tests for components and logic
 - **Playwright** - Comprehensive end-to-end tests for complete user workflows
@@ -90,7 +90,7 @@ Test individual components, functions, and logic **in isolation** to ensure they
 }
 ```
 
-### Jest Test Example from NoteChat-AI
+### Jest Test Example from DocuNote
 
 ```typescript
 // src/__tests__/lib/utils.test.ts
@@ -246,7 +246,7 @@ Test the **entire application** as a real user would use it, from start to finis
 }
 ```
 
-### Playwright Test Example from NoteChat-AI
+### Playwright Test Example from DocuNote
 
 ```typescript
 // e2e/file-upload.spec.ts
@@ -456,7 +456,7 @@ npx playwright show-report
 
 ## Project-Specific Examples
 
-### NoteChat-AI Test Coverage
+### DocuNote Test Coverage
 
 #### Jest Tests (`src/__tests__/`)
 

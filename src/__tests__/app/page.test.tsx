@@ -66,7 +66,7 @@ describe('Main Page Component', () => {
       renderPage();
       
       // Check for the header specifically (h1 element)
-      expect(screen.getByRole('heading', { name: /FileChat AI/i, level: 1 })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /DocuNote/i, level: 1 })).toBeInTheDocument();
     });
 
     it('should render the chat input form', () => {
@@ -96,7 +96,7 @@ describe('Main Page Component', () => {
     it('should display welcome message when no messages', () => {
       renderPage();
       
-      expect(screen.getByText(/Welcome to FileChat AI/i)).toBeInTheDocument();
+      expect(screen.getByText(/Welcome to DocuNote/i)).toBeInTheDocument();
     });
 
     it('should show upload prompt when no files uploaded', () => {

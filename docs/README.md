@@ -1,8 +1,8 @@
-# FileChat AI Documentation
+# 📄 DocuNote Documentation
 
 ## 📖 Documentation Overview
 
-Welcome! This guide helps you navigate all documentation.
+Welcome! This guide helps you navigate all DocuNote documentation.
 
 ### 🚀 Quick Start (New Users - ~15 minutes)
 

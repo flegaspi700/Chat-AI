@@ -4,7 +4,7 @@
 
 ## Overview
 
-Comprehensive error handling has been implemented throughout the NoteChat AI application using React Error Boundaries and Next.js error pages. This provides graceful error recovery, user-friendly error messages, and detailed error logging for debugging.
+Comprehensive error handling has been implemented throughout the DocuNote application using React Error Boundaries and Next.js error pages. This provides graceful error recovery, user-friendly error messages, and detailed error logging for debugging.
 
 ---
 

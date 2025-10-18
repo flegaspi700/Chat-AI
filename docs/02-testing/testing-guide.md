@@ -1,8 +1,8 @@
-# Automated Testing Guide for NoteChat-AI
+# Automated Testing Guide for DocuNote
 
 ## 📋 Overview
 
-This guide explains how to set up and run automated tests for the NoteChat-AI application.
+This guide explains how to set up and run automated tests for the DocuNote application.
 
 ## 🚀 Quick Start
 
@@ -92,7 +92,7 @@ After running `npm run test:coverage`, view the HTML report:
 start coverage/lcov-report/index.html
 
 # Or manually navigate to:
-# file:///d:/Learn/NoteChat-AI/coverage/lcov-report/index.html
+# file:///d:/Learn/DocuNote/coverage/lcov-report/index.html
 ```
 
 Coverage goals:
@@ -104,7 +104,7 @@ Coverage goals:
 ## 🗂️ Test Structure
 
 ```
-NoteChat-AI/
+DocuNote/
 ├── src/
 │   └── __tests__/
 │       ├── __mocks__/           # Mock data and utilities

@@ -2,7 +2,7 @@
 
 ## 📖 Overview
 
-Documentation for all major features in FileChat AI.
+Documentation for all major features in DocuNote.
 
 Each feature is documented with:
 - **Why** it exists (design decisions)

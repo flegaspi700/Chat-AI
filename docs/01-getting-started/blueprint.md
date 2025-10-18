@@ -1,9 +1,11 @@
-# **App Name**: FileChat AI
+# **App Name**: DocuNote
+
+**Tagline**: Turn documents into conversations
 
 ## Core Features:
 
-- **Chat Interface**: Real-time chat interface for interacting with the AI tool.
-- **Multi-Source Analysis**: The AI can use content from multiple documents and websites to provide comprehensive answers.
+- **Chat Interface**: Real-time AI-powered chat interface for conversing with your documents.
+- **Multi-Source Analysis**: The AI uses content from multiple documents and websites to provide comprehensive answers.
 - **File Upload**: Allows users to upload files (`.txt`, `.pdf`) to be used as a knowledge base.
 - **Website Scraping**: Users can provide any website URL, and the application will scrape its content to use as a source for the chat.
 - **Source Management**: A clean sidebar interface allows users to easily add, view, and remove their file and URL sources, organized into separate sections.

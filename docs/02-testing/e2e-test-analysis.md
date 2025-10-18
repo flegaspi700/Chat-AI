@@ -42,12 +42,12 @@ Actual UI Structure (from error-context.md):
   - Header:
     - button "Toggle Sidebar" (✓ EXISTS)
     - img (logo)
-    - heading "FileChat AI" [level=1]
-    - paragraph: "Chat with your documents"
+    - heading "DocuNote" [level=1]
+    - paragraph: "Turn documents into conversations"
     - button "Settings"
   - Welcome Screen:
     - img
-    - heading "Welcome to FileChat AI" [level=2]
+    - heading "Welcome to DocuNote" [level=2]
     - paragraph: "Upload a TXT or PDF file and start asking questions..."
   - Input Area:
     - textbox "Ask a question about your document(s)..."
@@ -74,7 +74,7 @@ Actual UI Structure (from error-context.md):
 
 | Expected Feature | Test Selector | Actual Reality |
 |-----------------|---------------|----------------|
-| Empty state message | `text=/upload files or add urls/i` | **Doesn't exist** - Shows "Welcome to FileChat AI" instead |
+| Empty state message | `text=/upload files or add urls/i` | **Doesn't exist** - Shows "Welcome to DocuNote" instead |
 | Sidebar toggle with aria-label | `[aria-label="Toggle sidebar"]` | **Selector wrong** - Button exists but test uses wrong selector |
 | Input with specific placeholder | `input[placeholder*="Ask"]` | **Selector wrong** - It's a `textbox`, not `input[placeholder*="Ask"]` |
 | File input | `input[type="file"]` | **Hidden/Not directly accessible** - Uses "Add Files" button instead |
@@ -169,7 +169,7 @@ Both test suites suffer from the **same root cause**:
 ### Empty State (Desktop - Chromium)
 **Test Expected:** "upload files or add urls" text  
 **Screenshot Shows:**
-- Welcome heading: "Welcome to FileChat AI"
+- Welcome heading: "Welcome to DocuNote"
 - Description: "Upload a TXT or PDF file and start asking questions to get insights from your document."
 - Input field visible but disabled until files added
 - Sidebar visible with "No URLs added" and "No files added" messages
@@ -265,7 +265,7 @@ const input = page.getByRole('textbox', { name: /ask a question/i });
 await expect(page.locator('text=/upload files or add urls/i')).toBeVisible();
 
 // ✅ NEW - Works with current UI
-await expect(page.getByRole('heading', { name: /Welcome to FileChat AI/i })).toBeVisible();
+await expect(page.getByRole('heading', { name: /Welcome to DocuNote/i })).toBeVisible();
 ```
 
 ### Fix 2: File Upload Pattern

@@ -38,13 +38,13 @@
 
 **Changes:**
 - Added ThemeToggleButton between title and Settings button
-- Layout: `[Logo] FileChat AI  [🌙/☀️] [⚙️]`
+- Layout: `[Logo] DocuNote  [🌙/☀️] [⚙️]`
 - No breaking changes to existing functionality
 
 **Visual Result:**
 ```
-Before: [☰] [Logo] FileChat AI                              [⚙️]
-After:  [☰] [Logo] FileChat AI                         [🌙] [⚙️]
+Before: [☰] [Logo] DocuNote                                 [⚙️]
+After:  [☰] [Logo] DocuNote                            [🌙] [⚙️]
 ```
 
 ---

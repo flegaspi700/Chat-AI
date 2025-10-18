@@ -62,7 +62,7 @@ Successfully cleaned up the test suite by removing/skipping tests for non-existe
 ## Key Improvements Made
 
 1. **Fixed Test Queries**
-   - Changed `getByText(/FileChat AI/i)` to use `getByRole('heading', { level: 1 })` to avoid duplicate matches
+   - Changed `getByText(/DocuNote/i)` to use `getByRole('heading', { level: 1 })` to avoid duplicate matches
    - Updated accessibility tests to match actual implementation
 
 2. **Proper Test Skipping**

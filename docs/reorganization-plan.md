@@ -184,7 +184,7 @@ mv docs/test-package-additions.json docs/05-reference/
 
 ### `docs/README.md` (Main Documentation Index)
 ```markdown
-# FileChat AI Documentation
+# DocuNote Documentation
 
 ## 📖 Documentation Overview
 
@@ -240,10 +240,10 @@ Welcome! This guide helps you navigate all documentation.
 
 ### `docs/01-getting-started/README.md`
 ```markdown
-# Getting Started with FileChat AI
+# Getting Started with DocuNote
 
 ## Quick Overview
-FileChat AI is a Next.js application that lets you chat with your documents (PDFs, text files) and websites.
+DocuNote is a Next.js application that lets you turn documents (PDFs, text files) and websites into conversations with AI.
 
 ## Prerequisites
 - Node.js 18+

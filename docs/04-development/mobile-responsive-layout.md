@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the mobile-first responsive design implementation for FileChat AI, ensuring an optimal user experience across all device sizes from mobile phones (320px) to large desktop screens (1920px+).
+This document describes the mobile-first responsive design implementation for DocuNote, ensuring an optimal user experience across all device sizes from mobile phones (320px) to large desktop screens (1920px+).
 
 ## Implementation Date
 
@@ -374,7 +374,7 @@ npm run test:e2e
 
 ## Conclusion
 
-The mobile responsive layout implementation ensures FileChat AI provides an excellent user experience across all device sizes. The focus on touch-friendly interactions, responsive layouts, and mobile-specific optimizations creates a native-like mobile app experience while maintaining desktop functionality.
+The mobile responsive layout implementation ensures DocuNote provides an excellent user experience across all device sizes. The focus on touch-friendly interactions, responsive layouts, and mobile-specific optimizations creates a native-like mobile app experience while maintaining desktop functionality.
 
 **Next Steps:**
 - Test on real mobile devices (iOS Safari, Chrome Android)

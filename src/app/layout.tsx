@@ -5,8 +5,13 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "FileChat AI",
-  description: "Chat with your documents",
+  title: "DocuNote - AI Document Chat",
+  description: "Turn documents into conversations. Upload files, scrape websites, and chat with AI about your content.",
+  openGraph: {
+    title: "DocuNote",
+    description: "AI-powered document conversations",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {

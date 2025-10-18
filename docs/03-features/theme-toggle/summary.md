@@ -143,12 +143,12 @@ The `next-themes` library uses client-side localStorage and React context that r
 
 ### Before
 ```
-Header: [☰] [Logo] FileChat AI                              [⚙️]
+Header: [☰] [Logo] DocuNote                                 [⚙️]
 ```
 
 ### After
 ```
-Header: [☰] [Logo] FileChat AI                         [🌙] [⚙️]
+Header: [☰] [Logo] DocuNote                            [🌙] [⚙️]
                                                        ↑ NEW!
 ```
 
@@ -296,4 +296,4 @@ npm run dev
 
 **🎉 Feature Complete! All tasks delivered successfully.**
 
-**Thank you for using FileChat AI!**
+**Thank you for using DocuNote!**

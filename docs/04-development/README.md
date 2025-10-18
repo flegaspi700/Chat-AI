@@ -1,6 +1,6 @@
 # Development Guide
 
-## 👨‍💻 Contributing to FileChat AI
+## 👨‍💻 Contributing to DocuNote
 
 This guide covers everything you need to contribute to the project.
 
@@ -17,7 +17,7 @@ This guide covers everything you need to contribute to the project.
 ```bash
 # Clone and install
 git clone <repo>
-cd NoteChat-AI
+cd DocuNote
 npm install
 
 # Set up environment

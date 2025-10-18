@@ -4,7 +4,7 @@
 
 ## Overview
 
-Comprehensive input validation has been implemented across the NoteChat AI application to improve security, stability, and user experience. This guide documents all validation features, security measures, and testing procedures.
+Comprehensive input validation has been implemented across the DocuNote application to improve security, stability, and user experience. This guide documents all validation features, security measures, and testing procedures.
 
 ---
 

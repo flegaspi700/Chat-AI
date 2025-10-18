@@ -1,4 +1,4 @@
-# Manual Test Scenarios for NoteChat-AI
+# Manual Test Scenarios for DocuNote
 
 ## Test Execution Checklist
 

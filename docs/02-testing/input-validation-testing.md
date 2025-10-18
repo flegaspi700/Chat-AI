@@ -48,7 +48,7 @@ Create a large file and try to upload:
 
 **Windows PowerShell:**
 ```powershell
-fsutil file createnew D:\Learn\NoteChat-AI\test-files\largefile.txt 11000000
+fsutil file createnew D:\Learn\DocuNote\test-files\largefile.txt 11000000
 ```
 
 **Expected Result:** ❌ Should be rejected with "File size exceeds 10MB limit"

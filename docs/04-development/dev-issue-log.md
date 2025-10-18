@@ -1,6 +1,6 @@
 # Development Issue Log
 
-This document tracks issues encountered during the development of the FileChat AI application.
+This document tracks issues encountered during the development of the DocuNote application (formerly FileChat AI).
 
 ## Theme Switching Functionality
 

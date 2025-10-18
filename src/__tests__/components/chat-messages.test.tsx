@@ -6,7 +6,7 @@ describe('ChatMessages', () => {
   it('renders empty state when no messages and no files', () => {
     render(<ChatMessages messages={[]} hasFiles={false} />);
     
-    expect(screen.getByText(/Welcome to FileChat AI/i)).toBeInTheDocument();
+    expect(screen.getByText(/Welcome to DocuNote/i)).toBeInTheDocument();
     expect(screen.getByText(/Upload a TXT or PDF file/i)).toBeInTheDocument();
   });
 

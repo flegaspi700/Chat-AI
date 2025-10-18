@@ -1,13 +1,13 @@
-# 🧪 Testing Infrastructure for NoteChat-AI
+# 🧪 Testing Infrastructure for DocuNote
 
 ## ✅ What's Been Created
 
-Comprehensive testing infrastructure for NoteChat-AI project:
+Comprehensive testing infrastructure for DocuNote project:
 
 ### 📁 Test Files Created
 
 ```
-NoteChat-AI/
+DocuNote/
 ├── docs/
 │   ├── testing-strategy.md          # Overall testing approach
 │   ├── testing-guide.md             # How to run automated tests

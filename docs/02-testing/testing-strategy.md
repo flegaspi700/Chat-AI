@@ -1,7 +1,7 @@
-# Testing Strategy for NoteChat-AI
+# Testing Strategy for DocuNote
 
 ## Overview
-This document outlines the comprehensive testing strategy for the NoteChat-AI application, including unit tests, integration tests, and end-to-end tests.
+This document outlines the comprehensive testing strategy for the DocuNote application, including unit tests, integration tests, and end-to-end tests.
 
 ## Testing Pyramid
 
