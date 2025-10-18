@@ -1,5 +1,7 @@
 # 📄 DocuNote
 
+[![CI](https://github.com/flegaspi700/DocuNote/actions/workflows/ci.yml/badge.svg)](https://github.com/flegaspi700/DocuNote/actions)
+
 **Turn documents into conversations**
 
 An intelligent AI-powered chat application built with Next.js 15 and Google Gemini that lets you upload files, scrape websites, and have natural conversations about your content—with automatic summaries and complete conversation history.

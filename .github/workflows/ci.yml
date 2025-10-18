@@ -1,0 +1,62 @@
+# 🚀 Basic CI Workflow for DocuNote
+# This workflow runs automated tests on every push and pull request
+
+name: CI
+
+# 📋 WHEN TO RUN: Trigger this workflow on push or pull request to main branch
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# 🛠️ JOBS: Define what work needs to be done
+jobs:
+  # Job 1: Run code quality checks and tests
+  test:
+    name: Code Quality & Tests
+    runs-on: ubuntu-latest  # Use latest Ubuntu VM
+    
+    steps:
+      # ✅ Step 1: Get the code from your repository
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+      
+      # ✅ Step 2: Install Node.js
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'  # Cache npm packages for faster runs
+      
+      # ✅ Step 3: Install all dependencies
+      - name: 📦 Install dependencies
+        run: npm ci  # Clean install (faster and more reliable than npm install)
+      
+      # ✅ Step 4: Check TypeScript types
+      - name: 🔍 Type check
+        run: npm run typecheck
+      
+      # ✅ Step 5: Lint the code
+      - name: 🧹 Lint code
+        run: npm run lint
+      
+      # ✅ Step 6: Run all tests
+      - name: 🧪 Run tests
+        run: npm run test:ci
+      
+      # ✅ Step 7: Build the application
+      - name: 🏗️ Build application
+        run: npm run build
+        env:
+          # Use a dummy API key for build (won't actually call API during build)
+          GOOGLE_GENAI_API_KEY: ${{ secrets.GOOGLE_GENAI_API_KEY || 'dummy-key-for-build' }}
+      
+      # ✅ Step 8: Upload test coverage report
+      - name: 📊 Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()  # Upload even if tests fail
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
