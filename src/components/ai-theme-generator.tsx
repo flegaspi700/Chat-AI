@@ -19,10 +19,16 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { generateAITheme } from "@/app/actions";
 import type { AITheme } from "@/lib/types";
-import { fetchUnsplashImage, generateGradientFallback } from "@/lib/unsplash";
 
 interface AiThemeGeneratorProps {
   setAiTheme?: Dispatch<SetStateAction<AITheme | null>>;
+}
+
+/**
+ * Generate a gradient fallback from primary and accent colors
+ */
+function generateGradientFallback(primaryColor: string, accentColor: string): string {
+  return `linear-gradient(135deg, hsl(${primaryColor}) 0%, hsl(${accentColor}) 100%)`;
 }
 
 export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
@@ -48,11 +54,10 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
       return;
     }
 
-    const { themeName, palette, imageHint } = result.theme;
+    const { themeName, palette, backgroundImageUrl } = result.theme;
     const themeId = `ai-${themeName.replace(/\s+/g, '-')}`;
 
-    // Fetch background image from Unsplash
-    const backgroundImageUrl = await fetchUnsplashImage(imageHint);
+    // Use AI-generated image or fallback to gradient
     const backgroundStyle = backgroundImageUrl 
       ? `url(${backgroundImageUrl})`
       : generateGradientFallback(palette.primary, palette.accent);
@@ -114,8 +119,7 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
     // Update parent state with background image URL
     setAiTheme({ 
       id: themeId, 
-      name: themeName, 
-      imageHint,
+      name: themeName,
       backgroundImageUrl: backgroundImageUrl || undefined
     });
 
@@ -135,9 +139,10 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
         setTheme(themeId);
     }
     
+    const imageStatus = backgroundImageUrl ? 'with AI-generated background' : 'with gradient background';
     toast({
       title: "Theme Generated!",
-      description: `The new theme "${themeName}" has been applied with background image.`,
+      description: `The new theme "${themeName}" has been applied ${imageStatus}.`,
     });
 
     setOpen(false);

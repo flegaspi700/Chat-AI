@@ -15,7 +15,6 @@ export type FileInfo = {
 export type AITheme = {
   id: string;
   name: string;
-  imageHint: string;
   backgroundImageUrl?: string;
 };
 
