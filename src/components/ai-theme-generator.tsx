@@ -112,7 +112,8 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
         const themeId = savedTheme.id;
         
         // Re-apply the theme styles to the DOM
-        applyThemeStyles(themeId, savedTheme.palette, savedTheme.backgroundImageUrl);
+        // Note: Background image not saved (too large), so gradient fallback will be used
+        applyThemeStyles(themeId, savedTheme.palette, undefined);
         
         if (setAiTheme) {
           setAiTheme(savedTheme);
@@ -151,11 +152,14 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
     setIsGenerating(false);
 
     // Update parent state with full theme data (including palette)
+    // NOTE: We don't save backgroundImageUrl to localStorage because base64 images
+    // are too large (100-200KB) and quickly exceed localStorage quota (5-10MB).
+    // The gradient fallback will be used on page reload.
     setAiTheme({ 
       id: themeId, 
       name: themeName,
       palette: palette, // Save palette for persistence
-      backgroundImageUrl: backgroundImageUrl || undefined
+      backgroundImageUrl: undefined // Don't persist images (too large for localStorage)
     });
 
     // Update next-themes by adding the new theme to the list and setting it
