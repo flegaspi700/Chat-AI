@@ -9,7 +9,6 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { googleAI } from '@genkit-ai/google-genai';
 import { z } from 'genkit';
 
 const GenerateThemeInputSchema = z.object({
@@ -37,27 +36,15 @@ const GenerateThemeOutputSchema = z.object({
 export type GenerateThemeOutput = z.infer<typeof GenerateThemeOutputSchema>;
 
 export async function generateTheme(input: GenerateThemeInput): Promise<GenerateThemeOutput> {
-  // First, generate the theme colors and image prompt
+  // Generate the theme colors and image prompt
   const themeData = await generateThemeFlow(input);
   
-  // Then, generate the background image using Imagen
-  try {
-    const imageResponse = await ai.generate({
-      model: googleAI.model('imagen-3.0-generate-001'),
-      prompt: themeData.imagePrompt,
-      output: { format: 'media' },
-    });
-
-    // Return theme with background image data URL
-    return {
-      ...themeData,
-      backgroundImageUrl: imageResponse.media?.url,
-    };
-  } catch (error) {
-    console.warn('Failed to generate background image with Imagen:', error);
-    // Return theme without background image (will use gradient fallback)
-    return themeData;
-  }
+  // Note: Imagen 3 requires Vertex AI (Google Cloud with billing), not available via standard Gemini API
+  // Using gradient fallback for now - can be enhanced later with Vertex AI integration
+  // or alternative image generation approaches
+  
+  // Return theme without background image (will use gradient fallback in UI)
+  return themeData;
 }
 
 const prompt = ai.definePrompt({

@@ -1,12 +1,45 @@
 # Migration to Imagen 3 for AI Theme Background Images
 
 **Date**: October 20, 2025  
-**Status**: ✅ **COMPLETE**  
-**Migration Type**: Unsplash → Google Imagen 3
+**Status**: ⚠️ **TEMPORARILY DISABLED** (Gradient Fallback Active)  
+**Migration Type**: Unsplash → Google Imagen 3 (Planned)
 
 ---
 
-## 🎯 Overview
+## ⚠️ Important Update
+
+**Imagen 3 is currently disabled** due to API availability constraints:
+
+- **Issue**: Imagen 3 (`imagen-3.0-generate-001`) requires **Vertex AI** (Google Cloud Platform with billing enabled)
+- **Current Behavior**: AI theme generator uses **gradient fallback** (no external image generation)
+- **Error**: `404 Not Found - models/imagen-3.0-generate-001 is not found for API version v1beta`
+- **Impact**: Themes still work perfectly with beautiful gradient backgrounds that match the color palette
+
+### Options to Enable Image Generation
+
+**Option A: Vertex AI Integration** (Full Imagen 3 support)
+- Requires: Google Cloud Platform account with billing
+- Setup: Enable Vertex AI API, configure service account
+- Benefit: Access to full Imagen 3 capabilities
+- Complexity: High (additional infrastructure)
+
+**Option B: Alternative Image Service** (Simplified approach)
+- Use: Pexels API, Pixabay, or other free image APIs
+- Setup: Simple API key registration
+- Benefit: Easier setup, no cloud infrastructure
+- Tradeoff: Search-based images (not AI-generated)
+
+**Option C: Keep Gradient Fallback** (Current state)
+- No additional setup required
+- Beautiful gradient backgrounds that match theme colors
+- Fastest performance (no API calls)
+- Simplest architecture
+
+For now, we're using **Option C** (gradient fallback) to maintain the simplified single-API-key architecture.
+
+---
+
+## 🎯 Original Migration Goals
 
 We've successfully migrated from Unsplash API to **Google Imagen 3** for generating background images in AI themes. This provides:
 
