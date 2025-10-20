@@ -19,10 +19,11 @@ An intelligent AI-powered chat application built with Next.js 15 and Google Gemi
 - **📄 File Uploads:** Upload and process both `.txt` and `.pdf` files (10MB limit) to use as a knowledge base
 - **🌐 Website Scraping:** Provide any website URL, and the application will scrape its content to use as a source
 - **📊 Source Management:** Clean sidebar interface to easily add, view, and remove your files and URL sources
-- **🎨 AI-Powered Theme Generation:** Dynamically create and apply color themes based on a text prompt
+- **🎨 AI-Powered Theme Generation:** Dynamically create and apply color themes with background images based on text prompts ✨ ENHANCED
+- **🖼️ Background Images:** Automatic Unsplash integration fetches beautiful images matching your theme (with gradient fallback)
 - **🌙 Dark/Light Mode:** Quick theme toggle with keyboard shortcut (`Ctrl+Shift+T`)
 - **📱 Responsive Design:** Modern, responsive UI that works across different screen sizes
-- **✅ Comprehensive Testing:** 93 tests with Jest and Playwright (47% coverage, actively improving)
+- **✅ Comprehensive Testing:** 164 tests with Jest and Playwright (52.6% coverage)
 
 ## 🚀 Getting Started
 
@@ -48,8 +49,16 @@ An intelligent AI-powered chat application built with Next.js 15 and Google Gemi
     
     Create a `.env.local` file in the root directory:
     ```env
-    GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
+    # Required: Gemini AI for chat and theme generation
+    GEMINI_API_KEY=your_gemini_api_key_here
+    
+    # Optional: Unsplash for AI theme background images
+    # Get free API key at https://unsplash.com/developers
+    # If not provided, themes will use gradient backgrounds
+    NEXT_PUBLIC_UNSPLASH_ACCESS_KEY=your_unsplash_access_key_here
     ```
+    
+    **See [AI Theme Background Images Guide](./docs/ai-theme-background-images.md) for detailed Unsplash setup.**
 
 4.  **Run the Development Server:**
     ```bash

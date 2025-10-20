@@ -16,6 +16,7 @@ export type AITheme = {
   id: string;
   name: string;
   imageHint: string;
+  backgroundImageUrl?: string;
 };
 
 export type Conversation = {

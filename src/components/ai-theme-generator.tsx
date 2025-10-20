@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { generateAITheme } from "@/app/actions";
 import type { AITheme } from "@/lib/types";
+import { fetchUnsplashImage, generateGradientFallback } from "@/lib/unsplash";
 
 interface AiThemeGeneratorProps {
   setAiTheme?: Dispatch<SetStateAction<AITheme | null>>;
@@ -36,9 +37,9 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
 
     setIsGenerating(true);
     const result = await generateAITheme(prompt);
-    setIsGenerating(false);
 
     if (result.error || !result.theme) {
+      setIsGenerating(false);
       toast({
         variant: "destructive",
         title: "Error",
@@ -49,6 +50,14 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
 
     const { themeName, palette, imageHint } = result.theme;
     const themeId = `ai-${themeName.replace(/\s+/g, '-')}`;
+
+    // Fetch background image from Unsplash
+    const backgroundImageUrl = await fetchUnsplashImage(imageHint);
+    const backgroundStyle = backgroundImageUrl 
+      ? `url(${backgroundImageUrl})`
+      : generateGradientFallback(palette.primary, palette.accent);
+
+    setIsGenerating(false);
 
     // Remove any existing AI theme style elements
     document.querySelectorAll('[id^="theme-ai-"]').forEach((el) => el.remove());
@@ -78,13 +87,37 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
         --input: ${palette.border};
         --ring: ${palette.primary};
       }
+      
+      html[data-theme='${themeId}'] body {
+        background-image: ${backgroundStyle};
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+      }
+      
+      html[data-theme='${themeId}'] body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: hsl(${palette.background} / 0.85);
+        z-index: -1;
+      }
     `;
     
     // Add the new theme to the head
     document.head.appendChild(style);
 
-    // Update parent state
-    setAiTheme({ id: themeId, name: themeName, imageHint });
+    // Update parent state with background image URL
+    setAiTheme({ 
+      id: themeId, 
+      name: themeName, 
+      imageHint,
+      backgroundImageUrl: backgroundImageUrl || undefined
+    });
 
     // Update next-themes by adding the new theme to the list and setting it
     if (!themes.includes(themeId)) {
@@ -104,7 +137,7 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
     
     toast({
       title: "Theme Generated!",
-      description: `The new theme "${themeName}" has been applied.`,
+      description: `The new theme "${themeName}" has been applied with background image.`,
     });
 
     setOpen(false);
