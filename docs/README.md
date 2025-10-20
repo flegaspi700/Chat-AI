@@ -62,6 +62,7 @@ That's it! You're ready to start developing.
 - **[Development Guide](./04-development/README.md)** - Overview
 - [Dev Issue Log](./04-development/dev-issue-log.md) - Known issues and fixes
 - [Git Commit Guide](./04-development/git-commit-guide.md) - How to commit changes
+- [CI/CD Pipeline](../README.md#-recent-updates) - Automated quality checks ✨ NEW
 - **[Daily Logs](./daily-logs/README.md)** - Daily development tracking
   - [Oct 7, 2025 Summary](./daily-logs/2025-10-07-summary.md) - Today's work
   - [Oct 7, 2025 Sessions](./daily-logs/2025-10-07-sessions.md) - Session notes
@@ -90,7 +91,8 @@ That's it! You're ready to start developing.
 | 🧪 **Write tests** | [Testing Overview](./02-testing/README.md) | jest-vs-playwright.md → testing-guide.md |
 | 🎨 **Add a feature** | [Features Overview](./03-features/README.md) | Theme toggle example |
 | 🐛 **Fix a bug** | [Dev Issue Log](./04-development/dev-issue-log.md) | Installation warnings |
-| 📚 **Understand the project** | [Blueprint](./01-getting-started/blueprint.md) | Getting Started → Testing |
+| � **Fix CI/CD issues** | [FUTURE-WORK.md](../FUTURE-WORK.md) | Recent CI/CD fixes |
+| �📚 **Understand the project** | [Blueprint](./01-getting-started/blueprint.md) | Getting Started → Testing |
 | ⚙️ **Set up my environment** | [Getting Started](./01-getting-started/README.md) | Installation warnings |
 | 📝 **Make a commit** | [Git Commit Guide](./04-development/git-commit-guide.md) | - |
 
@@ -109,4 +111,4 @@ That's it! You're ready to start developing.
 
 ---
 
-**Last Updated:** October 7, 2025
+**Last Updated:** October 20, 2025

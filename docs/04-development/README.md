@@ -49,6 +49,21 @@ git checkout -b fix/bug-description
 
 ### 3. Develop and Test
 ```bash
+# Run linter
+npm run lint
+
+# Run tests
+npm test
+
+# Check coverage
+npm run test:coverage
+
+# Build verification
+npm run build
+```
+
+**See [CI/CD Pipeline](./ci-cd-pipeline.md) for automated quality checks.**
+```bash
 # Make your changes
 # ...
 
