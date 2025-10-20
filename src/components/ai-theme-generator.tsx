@@ -31,10 +31,21 @@ function generateGradientFallback(primaryColor: string, accentColor: string): st
   return `linear-gradient(135deg, hsl(${primaryColor}) 0%, hsl(${accentColor}) 100%)`;
 }
 
+interface ThemePalette {
+  background: string;
+  foreground: string;
+  primary: string;
+  primaryForeground: string;
+  secondary: string;
+  accent: string;
+  card: string;
+  border: string;
+}
+
 /**
  * Apply a theme by creating/updating style elements in the DOM
  */
-function applyThemeStyles(themeId: string, palette: any, backgroundImageUrl?: string): void {
+function applyThemeStyles(themeId: string, palette: ThemePalette, backgroundImageUrl?: string): void {
   // Remove any existing AI theme style elements
   document.querySelectorAll('[id^="theme-ai-"]').forEach((el) => el.remove());
 
