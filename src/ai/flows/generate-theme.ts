@@ -39,7 +39,7 @@ export async function generateTheme(input: GenerateThemeInput): Promise<Generate
   // Generate the theme colors and image prompt
   const themeData = await generateThemeFlow(input);
   
-  // Generate background image using Imagen 4 via Gemini API
+  // Generate background image using Gemini 2.5 Flash Image model
   try {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -47,9 +47,9 @@ export async function generateTheme(input: GenerateThemeInput): Promise<Generate
       return themeData;
     }
     
-    // Call Imagen 4 using generateContent API with image modality
+    // Call Gemini 2.5 Flash Image using generateContent API
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-fast-generate-001:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: {
@@ -62,9 +62,9 @@ export async function generateTheme(input: GenerateThemeInput): Promise<Generate
             }],
           }],
           generationConfig: {
-            responseModalities: ['IMAGE'],
-            imageConfig: {
-              aspectRatio: '16:9', // Widescreen for backgrounds
+            response_modalities: ['Image'], // Only return image, no text
+            image_config: {
+              aspect_ratio: '16:9', // Widescreen for backgrounds
             },
           },
         }),
@@ -73,7 +73,7 @@ export async function generateTheme(input: GenerateThemeInput): Promise<Generate
     
     if (!response.ok) {
       const errorText = await response.text();
-      console.warn(`Imagen API error (${response.status}):`, errorText);
+      console.warn(`Gemini Image API error (${response.status}):`, errorText);
       return themeData;
     }
     
@@ -85,9 +85,9 @@ export async function generateTheme(input: GenerateThemeInput): Promise<Generate
       
       if (candidate.content && candidate.content.parts) {
         for (const part of candidate.content.parts) {
-          if (part.inlineData) {
+          if (part.inline_data) {
             // Image is returned as inline data
-            const { mimeType, data } = part.inlineData;
+            const { mimeType, data } = part.inline_data;
             const backgroundImageUrl = `data:${mimeType};base64,${data}`;
             
             return {
@@ -99,10 +99,10 @@ export async function generateTheme(input: GenerateThemeInput): Promise<Generate
       }
     }
     
-    console.warn('Imagen generated no images, using gradient fallback');
+    console.warn('Gemini generated no images, using gradient fallback');
     return themeData;
   } catch (error) {
-    console.warn('Failed to generate background image with Imagen:', error);
+    console.warn('Failed to generate background image with Gemini:', error);
     // Return theme without background image (will use gradient fallback)
     return themeData;
   }
