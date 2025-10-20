@@ -39,12 +39,73 @@ export async function generateTheme(input: GenerateThemeInput): Promise<Generate
   // Generate the theme colors and image prompt
   const themeData = await generateThemeFlow(input);
   
-  // Note: Imagen 3 requires Vertex AI (Google Cloud with billing), not available via standard Gemini API
-  // Using gradient fallback for now - can be enhanced later with Vertex AI integration
-  // or alternative image generation approaches
-  
-  // Return theme without background image (will use gradient fallback in UI)
-  return themeData;
+  // Generate background image using Imagen 4 via Gemini API
+  try {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      console.warn('GEMINI_API_KEY not set, using gradient fallback');
+      return themeData;
+    }
+    
+    // Call Imagen 4 using generateContent API with image modality
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-fast-generate-001:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: themeData.imagePrompt,
+            }],
+          }],
+          generationConfig: {
+            responseModalities: ['IMAGE'],
+            imageConfig: {
+              aspectRatio: '16:9', // Widescreen for backgrounds
+            },
+          },
+        }),
+      }
+    );
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.warn(`Imagen API error (${response.status}):`, errorText);
+      return themeData;
+    }
+    
+    const result = await response.json();
+    
+    // Extract the generated image from candidates
+    if (result.candidates && result.candidates.length > 0) {
+      const candidate = result.candidates[0];
+      
+      if (candidate.content && candidate.content.parts) {
+        for (const part of candidate.content.parts) {
+          if (part.inlineData) {
+            // Image is returned as inline data
+            const { mimeType, data } = part.inlineData;
+            const backgroundImageUrl = `data:${mimeType};base64,${data}`;
+            
+            return {
+              ...themeData,
+              backgroundImageUrl,
+            };
+          }
+        }
+      }
+    }
+    
+    console.warn('Imagen generated no images, using gradient fallback');
+    return themeData;
+  } catch (error) {
+    console.warn('Failed to generate background image with Imagen:', error);
+    // Return theme without background image (will use gradient fallback)
+    return themeData;
+  }
 }
 
 const prompt = ai.definePrompt({

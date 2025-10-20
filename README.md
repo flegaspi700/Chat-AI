@@ -19,7 +19,7 @@ An intelligent AI-powered chat application built with Next.js 15 and Google Gemi
 - **📄 File Uploads:** Upload and process both `.txt` and `.pdf` files (10MB limit) to use as a knowledge base
 - **🌐 Website Scraping:** Provide any website URL, and the application will scrape its content to use as a source
 - **📊 Source Management:** Clean sidebar interface to easily add, view, and remove your files and URL sources
-- **🎨 AI-Powered Theme Generation:** Dynamically create and apply beautiful color themes with gradient backgrounds
+- **🎨 AI-Powered Theme Generation:** Dynamically create and apply color themes with AI-generated background images powered by Imagen 4
 - **🌙 Dark/Light Mode:** Quick theme toggle with keyboard shortcut (`Ctrl+Shift+T`)
 - **📱 Responsive Design:** Modern, responsive UI that works across different screen sizes
 - **✅ Comprehensive Testing:** 164 tests with Jest and Playwright (52.6% coverage)
@@ -48,11 +48,11 @@ An intelligent AI-powered chat application built with Next.js 15 and Google Gemi
     
     Create a `.env.local` file in the root directory:
     ```env
-    # Required: Gemini API for chat and theme generation
+    # Required: Gemini API for chat, theme generation, and image generation
     GEMINI_API_KEY=your_gemini_api_key_here
     ```
     
-    **That's it!** Your Gemini API key powers chat responses and AI theme generation.
+    **That's it!** Your Gemini API key powers everything: chat responses, theme generation, and Imagen 4 background images.
 
 4.  **Run the Development Server:**
     ```bash
