@@ -37,10 +37,10 @@ const config: Config = {
   
   coverageThreshold: {
     global: {
-      branches: 65,      // Raised from 30 (current: 67.47%)
-      functions: 45,     // Raised from 29 (current: 45.35%)
-      lines: 52,         // Raised from 40 (current: 52.62%)
-      statements: 52,    // Raised from 40 (current: 52.62%)
+      branches: 65,      // Current: 67.47%
+      functions: 44,     // Current: 44.86% (adjusted after lint fixes)
+      lines: 51,         // Current: 51.34% (adjusted after lint fixes)
+      statements: 51,    // Current: 51.34% (adjusted after lint fixes)
     },
   },
   

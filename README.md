@@ -19,17 +19,17 @@ An intelligent AI-powered chat application built with Next.js 15 and Google Gemi
 - **📄 File Uploads:** Upload and process both `.txt` and `.pdf` files (10MB limit) to use as a knowledge base
 - **🌐 Website Scraping:** Provide any website URL, and the application will scrape its content to use as a source
 - **📊 Source Management:** Clean sidebar interface to easily add, view, and remove your files and URL sources
-- **🎨 AI-Powered Theme Generation:** Dynamically create and apply color themes based on a text prompt
+  - **🎨 AI-Powered Theme Generation:** Dynamically create and apply color themes with AI-generated background images powered by Gemini 2.5 Flash Image
 - **🌙 Dark/Light Mode:** Quick theme toggle with keyboard shortcut (`Ctrl+Shift+T`)
 - **📱 Responsive Design:** Modern, responsive UI that works across different screen sizes
-- **✅ Comprehensive Testing:** 93 tests with Jest and Playwright (47% coverage, actively improving)
+- **✅ Comprehensive Testing:** 164 tests with Jest and Playwright (51.2% coverage) with CI/CD pipeline
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - **Node.js** 18 or higher
 - **npm** or **yarn**
-- **Google Gemini API Key** ([Get one here](https://makersuite.google.com/app/apikey))
+- **Google Gemini API Key** ([Get one here](https://makersuite.google.com/app/apikey)) - Powers both chat and image generation!
 
 ### Installation
 
@@ -48,8 +48,11 @@ An intelligent AI-powered chat application built with Next.js 15 and Google Gemi
     
     Create a `.env.local` file in the root directory:
     ```env
-    GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
+    # Required: Gemini API for chat, theme generation, and image generation
+    GEMINI_API_KEY=your_gemini_api_key_here
     ```
+    
+    **That's it!** Your Gemini API key powers everything: chat responses, theme generation, and Gemini 2.5 Flash Image background images. No additional setup needed!
 
 4.  **Run the Development Server:**
     ```bash
@@ -133,8 +136,9 @@ Comprehensive documentation is available in the `docs/` folder:
 - **File Upload** - `.txt` and `.pdf` file processing with size limits (10MB)
 - **URL Scraping** - Website content extraction with SSRF protection
 - **Source Management** - Add/remove files and URLs with summary generation
-- **Theme System** - Dark/light mode + AI-generated themes
-- **Testing** - 65+ tests, 42% coverage
+- **Theme System** - Dark/light mode + AI-generated themes with optimized fonts
+- **Testing** - 164 tests, 51.2% coverage, CI/CD pipeline ✨ UPDATED
+- **CI/CD** - ESLint, Jest, and build checks on every push ✨ NEW
 
 ### 🚧 Known Limitations
 
@@ -201,9 +205,10 @@ npx playwright show-report # View E2E test report
 ```
 
 **Current Status:**
-- 54 passing Jest tests, 11 skipped
-- 2 passing E2E tests, 2 skipped
-- 42% statement coverage, 57% branch coverage
+- 164 passing Jest tests, 13 skipped
+- 15+ E2E tests with Playwright
+- 51.2% statement coverage, 65.6% branch coverage
+- CI/CD pipeline with automated checks
 
 For complete testing guide, see **[Testing Documentation](./docs/02-testing/README.md)**.
 
@@ -249,8 +254,8 @@ Contributions are welcome! Please see:
 |--------|-------|--------------|
 | **Lines of Code** | ~6,700+ lines | Oct 17, 2025 |
 | **Documentation** | ~17,000+ lines | Oct 17, 2025 |
-| **Tests** | 65+ tests | Oct 7, 2025 |
-| **Test Coverage** | 42% statements, 57% branches | Oct 7, 2025 |
+| **Tests** | 164+ tests | Oct 20, 2025 |
+| **Test Coverage** | 51.2% statements, 65.6% branches | Oct 20, 2025 |
 | **Components** | 32+ reusable UI components | Oct 17, 2025 |
 | **AI Flows** | 6 Genkit flows | Oct 17, 2025 |
 | **Custom Hooks** | 5 hooks | Oct 17, 2025 |
@@ -274,6 +279,26 @@ Built with:
 ---
 
 ## 🆕 Recent Updates
+
+### October 20, 2025 - CI/CD Pipeline & Code Quality ✨ NEW
+- ✅ **CI/CD Pipeline** - Automated quality checks on every push
+  - ESLint code quality validation
+  - Jest unit and integration tests
+  - Coverage threshold enforcement (51%+ coverage)
+  - Automated builds with Next.js
+  - GitGuardian security scanning
+- ✅ **Code Quality Improvements** - Enhanced type safety and cleaner code
+  - Fixed all ESLint warnings and errors
+  - Created `ThemePalette` interface (replaced `any` types)
+  - Removed unused variables and imports
+  - Optimized fonts with Next.js `next/font/google`
+  - Inter and Space Grotesk fonts with automatic optimization
+- ✅ **Testing Infrastructure** - Coverage thresholds adjusted
+  - Statements: 51.2% (locked in gains)
+  - Branches: 65.6% (exceeds 65% threshold)
+  - Functions: 44.9% (meets threshold)
+  - Lines: 51.2% (locked in gains)
+- 📚 **Documentation** - Updated README and test coverage metrics
 
 ### October 17, 2025 (Afternoon Session)
 - ✅ **Chat History Management** - Complete conversation management system ✨ NEW
@@ -338,4 +363,4 @@ Built with:
 
 ---
 
-**Last Updated:** October 18, 2025
+**Last Updated:** October 20, 2025

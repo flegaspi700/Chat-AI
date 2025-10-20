@@ -39,9 +39,12 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
   const fileSources = files.filter(f => f.type === 'file');
 
   const backgroundImage = useMemo(() => {
-    if (!aiTheme?.imageHint) return 'none';
-    const seed = aiTheme.id.replace(/\D/g, ''); // Use theme id for a consistent image
-    return `linear-gradient(to bottom, hsl(var(--background) / 0.8), hsl(var(--background) / 0.8)), url(https://picsum.photos/seed/${seed}/400/600)`;
+    // If AI theme has a generated background, use it
+    if (aiTheme?.backgroundImageUrl) {
+      return `linear-gradient(to bottom, hsl(var(--background) / 0.8), hsl(var(--background) / 0.8)), url(${aiTheme.backgroundImageUrl})`;
+    }
+    // Otherwise, no background image
+    return 'none';
   }, [aiTheme]);
 
   const handleAddUrl = async () => {
@@ -229,7 +232,7 @@ export function FileUpload({ files, setFiles, aiTheme }: FileUploadProps) {
     <div
       className={cn('p-4 space-y-4 transition-all duration-500', aiTheme && 'bg-cover bg-center')}
       style={{ backgroundImage }}
-      data-ai-hint={aiTheme?.imageHint}
+      data-ai-theme={aiTheme?.id}
     >
       <div className="space-y-3">
         <h3 className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">

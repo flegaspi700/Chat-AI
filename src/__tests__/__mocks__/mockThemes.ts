@@ -3,20 +3,20 @@ import type { AITheme } from '@/lib/types';
 export const mockLightTheme: AITheme = {
   id: 'theme-light-1',
   name: 'Ocean Breeze',
-  imageHint: 'Light blue ocean waves with white foam',
+  backgroundImageUrl: 'data:image/png;base64,mockImageData',
 };
 
 export const mockDarkTheme: AITheme = {
   id: 'theme-dark-1',
   name: 'Midnight Forest',
-  imageHint: 'Dark forest at night with moonlight',
+  backgroundImageUrl: 'data:image/png;base64,mockImageData',
 };
 
 export const mockThemeGenerationResponse = {
   theme: {
     id: 'theme-gen-1',
     name: 'Sunset Glow',
-    imageHint: 'Warm orange and pink sunset colors',
+    backgroundImageUrl: 'data:image/png;base64,mockImageData',
   },
 };
 

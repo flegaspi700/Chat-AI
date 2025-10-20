@@ -15,7 +15,17 @@ export type FileInfo = {
 export type AITheme = {
   id: string;
   name: string;
-  imageHint: string;
+  palette?: {
+    background: string;
+    foreground: string;
+    primary: string;
+    primaryForeground: string;
+    secondary: string;
+    accent: string;
+    card: string;
+    border: string;
+  };
+  backgroundImageUrl?: string;
 };
 
 export type Conversation = {

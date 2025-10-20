@@ -111,7 +111,13 @@ export function clearSources(): boolean {
 // ============================================
 
 export function saveAITheme(theme: AITheme): boolean {
-  return setItem(STORAGE_KEYS.AI_THEME, theme);
+  // Strip out backgroundImageUrl to prevent localStorage quota exceeded errors
+  // Base64 images are too large (100-200KB) for localStorage (5-10MB total limit)
+  const sanitizedTheme = {
+    ...theme,
+    backgroundImageUrl: undefined,
+  };
+  return setItem(STORAGE_KEYS.AI_THEME, sanitizedTheme);
 }
 
 export function loadAITheme(): AITheme | null {
@@ -253,12 +259,19 @@ export function createConversation(
   aiTheme?: AITheme,
   title?: string
 ): Conversation {
+  // Strip out backgroundImageUrl from aiTheme to prevent localStorage quota issues
+  // Base64 images can be 100-200KB each and quickly fill up localStorage (5-10MB limit)
+  const sanitizedTheme = aiTheme ? {
+    ...aiTheme,
+    backgroundImageUrl: undefined, // Remove large base64 images
+  } : undefined;
+  
   return {
     id: `conv_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     title: title || generateConversationTitle(messages),
     messages,
     sources,
-    aiTheme,
+    aiTheme: sanitizedTheme,
     createdAt: Date.now(),
     updatedAt: Date.now(),
   };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FileInfo } from '@/lib/types';
 
@@ -388,16 +388,14 @@ describe('FileUpload Component', () => {
       const aiTheme = {
         id: 'theme-123',
         name: 'Test Theme',
-        primaryColor: '#000000',
-        secondaryColor: '#ffffff',
-        imageHint: 'nature',
+        backgroundImageUrl: 'data:image/png;base64,mockImageData',
       };
 
       const { container } = render(
         <FileUpload files={[]} setFiles={mockSetFiles} aiTheme={aiTheme} />
       );
       
-      const mainDiv = container.querySelector('[data-ai-hint="nature"]');
+      const mainDiv = container.querySelector('[data-ai-theme="theme-123"]');
       expect(mainDiv).toBeInTheDocument();
     });
 

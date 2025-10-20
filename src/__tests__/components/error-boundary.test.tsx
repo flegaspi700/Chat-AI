@@ -297,8 +297,6 @@ describe('ErrorBoundary Component', () => {
     });
 
     it('should pass resetError function to custom FallbackComponent', () => {
-      const resetMock = jest.fn();
-
       const CustomFallback: React.FC<ErrorFallbackProps> = ({ resetError }) => (
         <button onClick={resetError}>Custom Reset</button>
       );
