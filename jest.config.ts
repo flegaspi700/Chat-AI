@@ -59,7 +59,7 @@ const config: Config = {
   
   // Transform node_modules that use ESM
   transformIgnorePatterns: [
-    'node_modules/(?!(lucide-react)/)',
+    'node_modules/(?!(lucide-react|cheerio|cheerio-select|dom-serializer|domhandler|domutils|htmlparser2|entities)/)',
   ],
   
   // Test timeout
