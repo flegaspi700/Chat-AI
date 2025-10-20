@@ -79,16 +79,24 @@ export async function generateTheme(input: GenerateThemeInput): Promise<Generate
     
     const result = await response.json();
     
+    console.log('Gemini API Response:', JSON.stringify(result, null, 2));
+    
     // Extract the generated image from candidates
     if (result.candidates && result.candidates.length > 0) {
       const candidate = result.candidates[0];
       
       if (candidate.content && candidate.content.parts) {
         for (const part of candidate.content.parts) {
-          if (part.inline_data) {
+          // Try both camelCase and snake_case (API might use either)
+          const inlineData = part.inline_data || part.inlineData;
+          
+          if (inlineData) {
             // Image is returned as inline data
-            const { mimeType, data } = part.inline_data;
-            const backgroundImageUrl = `data:${mimeType};base64,${data}`;
+            const { mimeType, data, mime_type } = inlineData;
+            const mime = mimeType || mime_type;
+            const backgroundImageUrl = `data:${mime};base64,${data}`;
+            
+            console.log('✅ Image generated successfully:', mime, `${data.length} bytes`);
             
             return {
               ...themeData,
@@ -99,7 +107,8 @@ export async function generateTheme(input: GenerateThemeInput): Promise<Generate
       }
     }
     
-    console.warn('Gemini generated no images, using gradient fallback');
+    console.warn('⚠️ Gemini generated no images, using gradient fallback');
+    console.warn('Response structure:', JSON.stringify(result, null, 2));
     return themeData;
   } catch (error) {
     console.warn('Failed to generate background image with Gemini:', error);
