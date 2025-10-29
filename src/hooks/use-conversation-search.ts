@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import type { Conversation } from '@/lib/types';
 
 interface UseConversationSearchReturn {
@@ -9,18 +9,39 @@ interface UseConversationSearchReturn {
   hasResults: boolean;
 }
 
+interface UseConversationSearchOptions {
+  debounce?: number; // Debounce delay in milliseconds (default: 0 for instant search)
+}
+
 /**
  * Custom hook for searching and filtering conversations
  * Searches both conversation titles and message content
  */
 export function useConversationSearch(
-  conversations: Conversation[]
+  conversations: Conversation[],
+  options: UseConversationSearchOptions = {}
 ): UseConversationSearchReturn {
+  const { debounce = 0 } = options;
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+
+  // Debounce the search query
+  useEffect(() => {
+    if (debounce === 0) {
+      setDebouncedQuery(searchQuery);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, debounce);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, debounce]);
 
   const filteredConversations = useMemo(() => {
     // If no search query, return all conversations
-    const trimmedQuery = searchQuery.trim();
+    const trimmedQuery = debouncedQuery.trim();
     if (!trimmedQuery) {
       return conversations;
     }
@@ -40,7 +61,7 @@ export function useConversationSearch(
 
       return hasMessageMatch;
     });
-  }, [conversations, searchQuery]);
+  }, [conversations, debouncedQuery]);
 
   const hasResults = filteredConversations.length > 0;
 

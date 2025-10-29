@@ -34,14 +34,14 @@ export function ConversationHistory({
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  // Use search hook
+  // Use search hook with 300ms debounce for better performance
   const { 
     filteredConversations, 
     searchQuery, 
     setSearchQuery, 
     clearSearch, 
     hasResults 
-  } = useConversationSearch(conversations);
+  } = useConversationSearch(conversations, { debounce: 300 });
 
   // Load conversations on mount
   useEffect(() => {

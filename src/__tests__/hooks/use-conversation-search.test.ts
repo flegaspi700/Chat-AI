@@ -210,4 +210,53 @@ describe('useConversationSearch', () => {
       expect(result.current.filteredConversations).toEqual(mockConversations);
     });
   });
+
+  describe('debouncing', () => {
+    beforeEach(() => {
+      jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('should debounce search query updates', () => {
+      const { result } = renderHook(() => useConversationSearch(mockConversations, { debounce: 300 }));
+
+      // Rapidly change search query
+      act(() => {
+        result.current.setSearchQuery('R');
+      });
+      
+      act(() => {
+        result.current.setSearchQuery('Re');
+      });
+      
+      act(() => {
+        result.current.setSearchQuery('Rea');
+      });
+
+      // Before debounce time, should still show all results
+      expect(result.current.filteredConversations).toEqual(mockConversations);
+
+      // Fast-forward time
+      act(() => {
+        jest.advanceTimersByTime(300);
+      });
+
+      // After debounce, should show filtered results
+      expect(result.current.filteredConversations.length).toBeLessThan(mockConversations.length);
+    });
+
+    it('should use instant search when debounce is 0 or not provided', () => {
+      const { result } = renderHook(() => useConversationSearch(mockConversations));
+
+      act(() => {
+        result.current.setSearchQuery('Testing Best');
+      });
+
+      // Should filter immediately without debounce
+      expect(result.current.filteredConversations).toHaveLength(1);
+    });
+  });
 });
