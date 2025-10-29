@@ -4,17 +4,21 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { Input } from '@/components/ui/input';
 import { 
   MessageSquarePlus, 
   Trash2, 
   Clock,
   ChevronRight,
+  Search,
+  X,
 } from 'lucide-react';
 import type { Conversation } from '@/lib/types';
 import {
   loadConversations,
   deleteConversation,
 } from '@/lib/storage';
+import { useConversationSearch } from '@/hooks/use-conversation-search';
 
 interface ConversationHistoryProps {
   onNewConversation: () => void;
@@ -29,6 +33,15 @@ export function ConversationHistory({
 }: ConversationHistoryProps) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+  // Use search hook
+  const { 
+    filteredConversations, 
+    searchQuery, 
+    setSearchQuery, 
+    clearSearch, 
+    hasResults 
+  } = useConversationSearch(conversations);
 
   // Load conversations on mount
   useEffect(() => {
@@ -93,16 +106,51 @@ export function ConversationHistory({
 
       <Separator />
 
+      {/* Search Input */}
+      <div className="p-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Search conversations..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 pr-9"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Clear search"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      <Separator />
+
       {/* Conversations List */}
       <ScrollArea className="flex-1">
         <div className="p-2 space-y-1">
-          {conversations.length === 0 ? (
+          {filteredConversations.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground text-sm">
-              <p>No conversations yet</p>
-              <p className="text-xs mt-1">Start chatting to create your first conversation</p>
+              {conversations.length === 0 ? (
+                <>
+                  <p>No conversations yet</p>
+                  <p className="text-xs mt-1">Start chatting to create your first conversation</p>
+                </>
+              ) : (
+                <>
+                  <p>No conversations found</p>
+                  <p className="text-xs mt-1">Try a different search term</p>
+                </>
+              )}
             </div>
           ) : (
-            conversations.map((conversation) => {
+            filteredConversations.map((conversation) => {
               const isActive = conversation.id === currentConversationId;
               const isHovered = hoveredId === conversation.id;
 

@@ -579,4 +579,172 @@ describe('ConversationHistory', () => {
       expect(srTexts).toHaveLength(mockConversations.length);
     });
   });
+
+  describe('Search functionality', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      mockConfirm.mockReturnValue(false);
+      (storage.loadConversations as jest.Mock).mockReturnValue(mockConversations);
+    });
+
+    it('should display search input', () => {
+      render(
+        <ConversationHistory
+          onNewConversation={mockOnNewConversation}
+          onLoadConversation={mockOnLoadConversation}
+          currentConversationId={null}
+        />
+      );
+
+      const searchInput = screen.getByPlaceholderText(/search conversations/i);
+      expect(searchInput).toBeInTheDocument();
+    });
+
+    it('should filter conversations by search query', async () => {
+      const user = userEvent.setup();
+      
+      render(
+        <ConversationHistory
+          onNewConversation={mockOnNewConversation}
+          onLoadConversation={mockOnLoadConversation}
+          currentConversationId={null}
+        />
+      );
+
+      // Initially all conversations visible
+      expect(screen.getByText('First Conversation')).toBeInTheDocument();
+      expect(screen.getByText('Second Conversation')).toBeInTheDocument();
+
+      // Type in search
+      const searchInput = screen.getByPlaceholderText(/search conversations/i);
+      await user.type(searchInput, 'First');
+
+      // Only matching conversation should be visible
+      await waitFor(() => {
+        expect(screen.getByText('First Conversation')).toBeInTheDocument();
+        expect(screen.queryByText('Second Conversation')).not.toBeInTheDocument();
+      });
+    });
+
+    it('should be case-insensitive', async () => {
+      const user = userEvent.setup();
+      
+      render(
+        <ConversationHistory
+          onNewConversation={mockOnNewConversation}
+          onLoadConversation={mockOnLoadConversation}
+          currentConversationId={null}
+        />
+      );
+
+      const searchInput = screen.getByPlaceholderText(/search conversations/i);
+      await user.type(searchInput, 'FIRST');
+
+      await waitFor(() => {
+        expect(screen.getByText('First Conversation')).toBeInTheDocument();
+        expect(screen.queryByText('Second Conversation')).not.toBeInTheDocument();
+      });
+    });
+
+    it('should show "no results" message when no matches', async () => {
+      const user = userEvent.setup();
+      
+      render(
+        <ConversationHistory
+          onNewConversation={mockOnNewConversation}
+          onLoadConversation={mockOnLoadConversation}
+          currentConversationId={null}
+        />
+      );
+
+      const searchInput = screen.getByPlaceholderText(/search conversations/i);
+      await user.type(searchInput, 'nonexistent query');
+
+      await waitFor(() => {
+        expect(screen.getByText(/no conversations found/i)).toBeInTheDocument();
+      });
+    });
+
+    it('should clear search when clear button clicked', async () => {
+      const user = userEvent.setup();
+      
+      render(
+        <ConversationHistory
+          onNewConversation={mockOnNewConversation}
+          onLoadConversation={mockOnLoadConversation}
+          currentConversationId={null}
+        />
+      );
+
+      const searchInput = screen.getByPlaceholderText(/search conversations/i);
+      await user.type(searchInput, 'First');
+
+      await waitFor(() => {
+        expect(screen.queryByText('Second Conversation')).not.toBeInTheDocument();
+      });
+
+      // Click clear button
+      const clearButton = screen.getByRole('button', { name: /clear search/i });
+      await user.click(clearButton);
+
+      // All conversations should be visible again
+      await waitFor(() => {
+        expect(screen.getByText('First Conversation')).toBeInTheDocument();
+        expect(screen.getByText('Second Conversation')).toBeInTheDocument();
+      });
+    });
+
+    it('should only show clear button when there is a search query', async () => {
+      const user = userEvent.setup();
+      
+      render(
+        <ConversationHistory
+          onNewConversation={mockOnNewConversation}
+          onLoadConversation={mockOnLoadConversation}
+          currentConversationId={null}
+        />
+      );
+
+      // No clear button initially
+      expect(screen.queryByRole('button', { name: /clear search/i })).not.toBeInTheDocument();
+
+      // Type search query
+      const searchInput = screen.getByPlaceholderText(/search conversations/i);
+      await user.type(searchInput, 'First');
+
+      // Clear button appears
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /clear search/i })).toBeInTheDocument();
+      });
+
+      // Clear the search
+      await user.clear(searchInput);
+
+      // Clear button disappears
+      await waitFor(() => {
+        expect(screen.queryByRole('button', { name: /clear search/i })).not.toBeInTheDocument();
+      });
+    });
+
+    it('should search in message content', async () => {
+      const user = userEvent.setup();
+      
+      render(
+        <ConversationHistory
+          onNewConversation={mockOnNewConversation}
+          onLoadConversation={mockOnLoadConversation}
+          currentConversationId={null}
+        />
+      );
+
+      const searchInput = screen.getByPlaceholderText(/search conversations/i);
+      await user.type(searchInput, 'Hello');
+
+      // Should find "First Conversation" which contains "Hello" in messages
+      await waitFor(() => {
+        expect(screen.getByText('First Conversation')).toBeInTheDocument();
+        expect(screen.queryByText('Second Conversation')).not.toBeInTheDocument();
+      });
+    });
+  });
 });
