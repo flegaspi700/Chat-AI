@@ -49,8 +49,8 @@ jobs:
       - name: 🏗️ Build application
         run: npm run build
         env:
-          # Use a dummy API key for build (won't actually call API during build)
-          GOOGLE_GENAI_API_KEY: ${{ secrets.GOOGLE_GENAI_API_KEY || 'dummy-key-for-build' }}
+          # Provide API key if available, otherwise use dummy for build
+          GOOGLE_GENAI_API_KEY: ${{ secrets.GOOGLE_GENAI_API_KEY }}
       
       # ✅ Step 8: Upload test coverage report
       - name: 📊 Upload coverage report
