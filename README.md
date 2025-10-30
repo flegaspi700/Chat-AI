@@ -134,6 +134,8 @@ Comprehensive documentation is available in the `docs/` folder:
 - **Conversation Search** - Search by title or message content with debounced filtering
 - **Search Filters** - Filter conversations by date range, source type ✨ NEW
 - **Keyboard Shortcuts** - Quick navigation with Ctrl+N, Ctrl+K, Ctrl+E, Ctrl+Shift+T ✨ NEW
+- **Message Editing** - Edit and regenerate AI responses ✨ NEW
+- **Conversation Tags** - Organize with custom color-coded tags ✨ NEW
 - **Content Summaries** - AI-generated summaries for files and URLs
 - **Export Conversations** - Download chat history as TXT or PDF
 - **Response Streaming** - Real-time token-by-token AI responses
@@ -145,7 +147,7 @@ Comprehensive documentation is available in the `docs/` folder:
 - **URL Scraping** - Website content extraction with SSRF protection
 - **Source Management** - Add/remove files and URLs with summary generation
 - **Theme System** - Dark/light mode + AI-generated themes with optimized fonts
-- **Testing** - 263 tests, 53.14% coverage, CI/CD pipeline
+- **Testing** - 296 tests, 53.14% coverage, CI/CD pipeline
 - **CI/CD** - ESLint, Jest, and build checks on every push
 
 ### 🚧 Known Limitations
@@ -177,8 +179,8 @@ See **[Development Issue Log](./docs/04-development/dev-issue-log.md)** for deta
 10. ~~**Export Conversations**~~ ✅ COMPLETED (Oct 30, 2025) - Download chat history as TXT/PDF
 11. ~~**Keyboard Shortcuts**~~ ✅ COMPLETED (Oct 30, 2025) - Navigate with Ctrl+N, Ctrl+K, Ctrl+E, Ctrl+Shift+T
 12. ~~**Advanced Search Filters**~~ ✅ COMPLETED (Oct 30, 2025) - Filter by date, source type, message count
-13. **Message Editing** - Edit and regenerate AI responses
-14. **Conversation Tags** - Organize with custom tags
+13. ~~**Message Editing**~~ ✅ COMPLETED (Oct 30, 2025) - Edit and regenerate AI responses
+14. ~~**Conversation Tags**~~ ✅ COMPLETED (Oct 30, 2025) - Organize with custom tags
 
 ### Low Priority (Future Features)
 18. **User Authentication** - Multi-user support with accounts
