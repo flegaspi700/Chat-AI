@@ -5,6 +5,12 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { 
   MessageSquarePlus, 
   Trash2, 
@@ -167,18 +173,26 @@ export function ConversationHistory({
   };
 
   return (
-    <div className="flex flex-col h-full">
-      {/* New Conversation Button */}
-      <div className="p-3">
-        <Button
-          onClick={onNewConversation}
-          className="w-full min-h-[44px] touch-manipulation"
-          variant="outline"
-        >
-          <MessageSquarePlus className="mr-2 h-4 w-4" />
-          New Conversation
-        </Button>
-      </div>
+    <TooltipProvider>
+      <div className="flex flex-col h-full">
+        {/* New Conversation Button */}
+        <div className="p-3">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={onNewConversation}
+                className="w-full min-h-[44px] touch-manipulation"
+                variant="outline"
+              >
+                <MessageSquarePlus className="mr-2 h-4 w-4" />
+                New Conversation
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>Start a new conversation (Ctrl+N)</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
 
       <Separator />
 
@@ -195,14 +209,21 @@ export function ConversationHistory({
             className="pl-9 pr-9"
           />
           {searchQuery && (
-            <button
-              type="button"
-              onClick={clearSearch}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Clear search"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  onClick={clearSearch}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label="Clear search"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Clear search (Esc)</p>
+              </TooltipContent>
+            </Tooltip>
           )}
         </div>
       </div>
@@ -210,18 +231,24 @@ export function ConversationHistory({
       {/* Filter Controls */}
       <div className="px-3 pb-3 space-y-2">
         <div className="flex items-center justify-between gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="flex-1">
-                <Filter className="mr-2 h-3 w-3" />
-                Filters
-                {hasActiveFilters && (
-                  <Badge variant="secondary" className="ml-2 h-4 px-1 text-xs">
-                    {getActiveFilterCount()}
-                  </Badge>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
+          <Tooltip>
+            <DropdownMenu>
+              <TooltipTrigger asChild>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex-1">
+                    <Filter className="mr-2 h-3 w-3" />
+                    Filters
+                    {hasActiveFilters && (
+                      <Badge variant="secondary" className="ml-2 h-4 px-1 text-xs">
+                        {getActiveFilterCount()}
+                      </Badge>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Filter conversations by date, source, or length</p>
+              </TooltipContent>
             <DropdownMenuContent align="start" className="w-56">
               <DropdownMenuLabel className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
@@ -263,6 +290,7 @@ export function ConversationHistory({
               )}
             </DropdownMenuContent>
           </DropdownMenu>
+          </Tooltip>
         </div>
 
         {/* Active Filters Display */}
@@ -380,38 +408,52 @@ export function ConversationHistory({
                       isHovered || isActive ? 'opacity-100' : 'opacity-0'
                     }`}>
                       {/* Export Dropdown */}
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <button
-                            type="button"
-                            className="h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground touch-manipulation"
-                            aria-label="Export conversation"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Download className="h-4 w-4" />
-                            <span className="sr-only">Export conversation</span>
-                          </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={(e) => handleExport(e, conversation, 'txt')}>
-                            Export as TXT
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={(e) => handleExport(e, conversation, 'pdf')}>
-                            Export as PDF
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <Tooltip>
+                        <DropdownMenu>
+                          <TooltipTrigger asChild>
+                            <DropdownMenuTrigger asChild>
+                              <button
+                                type="button"
+                                className="h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground touch-manipulation"
+                                aria-label="Export conversation"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Download className="h-4 w-4" />
+                                <span className="sr-only">Export conversation</span>
+                              </button>
+                            </DropdownMenuTrigger>
+                          </TooltipTrigger>
+                          <TooltipContent side="right">
+                            <p>Export conversation (Ctrl+E)</p>
+                          </TooltipContent>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={(e) => handleExport(e, conversation, 'txt')}>
+                              Export as TXT
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => handleExport(e, conversation, 'pdf')}>
+                              Export as PDF
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </Tooltip>
 
                       {/* Delete Button */}
-                      <button
-                        type="button"
-                        className="h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-destructive/10 hover:text-destructive touch-manipulation"
-                        onClick={(e) => handleDelete(e, conversation.id)}
-                        aria-label="Delete conversation"
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                        <span className="sr-only">Delete conversation</span>
-                      </button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            type="button"
+                            className="h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-destructive/10 hover:text-destructive touch-manipulation"
+                            onClick={(e) => handleDelete(e, conversation.id)}
+                            aria-label="Delete conversation"
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                            <span className="sr-only">Delete conversation</span>
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="right">
+                          <p>Delete conversation</p>
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
                   </div>
                 </div>
@@ -421,5 +463,6 @@ export function ConversationHistory({
         </div>
       </ScrollArea>
     </div>
+    </TooltipProvider>
   );
 }

@@ -45,7 +45,7 @@ interface ThemePalette {
 /**
  * Apply a theme by creating/updating style elements in the DOM
  */
-function applyThemeStyles(themeId: string, palette: ThemePalette, backgroundImageUrl?: string): void {
+export function applyThemeStyles(themeId: string, palette: ThemePalette, backgroundImageUrl?: string): void {
   // Remove any existing AI theme style elements
   document.querySelectorAll('[id^="theme-ai-"]').forEach((el) => el.remove());
 
@@ -111,32 +111,8 @@ export function AiThemeGenerator({ setAiTheme }: AiThemeGeneratorProps) {
   const { setTheme, themes, resolvedTheme } = useTheme();
   const { toast } = useToast();
 
-  // Re-apply AI theme from localStorage on mount (for persistence across sessions)
-  useEffect(() => {
-    // Import storage function dynamically (client-side only)
-    import('@/lib/storage').then(({ loadAITheme }) => {
-      const savedTheme = loadAITheme();
-      
-      if (savedTheme && savedTheme.palette) {
-        console.log('🎨 Restoring saved AI theme:', savedTheme.name);
-        
-        const themeId = savedTheme.id;
-        
-        // Re-apply the theme styles to the DOM
-        // Note: Background image not saved (too large), so gradient fallback will be used
-        applyThemeStyles(themeId, savedTheme.palette, undefined);
-        
-        if (setAiTheme) {
-          setAiTheme(savedTheme);
-        }
-        
-        // Set the theme in next-themes
-        setTimeout(() => {
-          setTheme(themeId);
-        }, 100);
-      }
-    });
-  }, [setAiTheme, setTheme]);
+  // Note: AI theme restoration is handled in the parent component (page.tsx)
+  // to avoid re-applying the theme every time the settings dropdown opens
 
   const handleGenerate = async () => {
     if (!setAiTheme) return;
