@@ -21,18 +21,10 @@ const ThrowError: React.FC<{ shouldThrow?: boolean; message?: string }> = ({
   return <div>No error</div>;
 };
 
-// Suppress console.error for these tests
-beforeAll(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-});
-
-afterAll(() => {
-  (console.error as jest.Mock).mockRestore();
-});
-
 describe('ErrorBoundary Component', () => {
   beforeEach(() => {
     (logError as jest.Mock).mockClear();
+    // Clear the global console.error mock (from jest.setup.ts)
     (console.error as jest.Mock).mockClear();
   });
 
