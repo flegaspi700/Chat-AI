@@ -49,9 +49,10 @@ export default function RootLayout({
         <ThemeProvider
           attribute="data-theme"
           defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
+          enableSystem={false}
+          disableTransitionOnChange={false}
           themes={['light', 'dark', 'gray']}
+          storageKey="docunote-theme"
         >
           <SidebarProvider>
             {children}

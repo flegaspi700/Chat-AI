@@ -2,6 +2,26 @@
 
 DocuNote provides keyboard shortcuts to help you navigate and use the application more efficiently.
 
+## Discoverability
+
+### In-App Help
+
+You can view all available keyboard shortcuts directly in the app:
+1. Click the **Settings** button (gear icon) in the top-right corner
+2. Select **Keyboard Shortcuts** from the menu
+3. A dialog will display all shortcuts organized by category
+
+### Button Tooltips
+
+Hover over any button to see what it does. Tooltips include:
+- A description of the button's action
+- The keyboard shortcut (if available)
+
+Example tooltips:
+- **New Conversation button**: "Start a new conversation (Ctrl+N)"
+- **Theme Toggle**: "Toggle theme (Ctrl+Shift+T)"
+- **Export button**: "Export conversation (Ctrl+E)"
+
 ## Available Shortcuts
 
 ### Global Shortcuts

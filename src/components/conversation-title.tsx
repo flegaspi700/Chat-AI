@@ -2,6 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Pencil, Check, X } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface ConversationTitleProps {
   title: string;
@@ -87,20 +93,29 @@ export function ConversationTitle({ title, onTitleChange, isNewConversation }: C
   }
 
   return (
-    <div className="flex items-center gap-2 flex-1 min-w-0 group">
-      <h2 className="text-sm font-medium truncate" title={displayTitle}>
-        {displayTitle}
-      </h2>
-      {!isNewConversation && (
-        <button
-          type="button"
-          onClick={() => setIsEditing(true)}
-          className="h-7 w-7 shrink-0 inline-flex items-center justify-center rounded-md opacity-0 group-hover:opacity-100 hover:bg-accent hover:text-accent-foreground transition-opacity"
-          aria-label="Edit conversation title"
-        >
-          <Pencil className="h-3 w-3" />
-        </button>
-      )}
-    </div>
+    <TooltipProvider>
+      <div className="flex items-center gap-2 flex-1 min-w-0 group">
+        <h2 className="text-sm font-medium truncate" title={displayTitle}>
+          {displayTitle}
+        </h2>
+        {!isNewConversation && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={() => setIsEditing(true)}
+                className="h-7 w-7 shrink-0 inline-flex items-center justify-center rounded-md opacity-0 group-hover:opacity-100 hover:bg-accent hover:text-accent-foreground transition-opacity"
+                aria-label="Edit conversation title"
+              >
+                <Pencil className="h-3 w-3" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>Edit conversation title</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+      </div>
+    </TooltipProvider>
   );
 }

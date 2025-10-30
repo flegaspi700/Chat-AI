@@ -33,6 +33,7 @@ import {
 import { useMessagesPersistence, useSourcesPersistence, useAIThemePersistence } from '@/hooks/use-persistence';
 import { useStreamingResponse } from '@/hooks/use-streaming';
 import { validateMessageLength } from '@/lib/validation';
+import { applyThemeStyles } from '@/components/ai-theme-generator';
 import { ErrorBoundary, ChatErrorFallback, SidebarErrorFallback } from '@/components/error-boundary';
 
 export default function Home() {
@@ -67,6 +68,17 @@ export default function Home() {
     }
     if (savedTheme) {
       setAiTheme(savedTheme);
+      
+      // Apply the AI theme styles to the DOM
+      if (savedTheme.palette) {
+        console.log('🎨 Restoring saved AI theme:', savedTheme.name);
+        applyThemeStyles(savedTheme.id, savedTheme.palette, undefined);
+        
+        // Set the theme in next-themes
+        setTimeout(() => {
+          setTheme(savedTheme.id);
+        }, 100);
+      }
     }
     
     setIsLoaded(true);
@@ -89,7 +101,7 @@ export default function Home() {
         description: `Restored ${savedMessages.length} messages and ${savedSources.length} sources.`,
       });
     }
-  }, [toast]);
+  }, [toast, setTheme]);
 
   // Auto-save data when it changes
   useMessagesPersistence(messages);
