@@ -83,38 +83,41 @@ jest.mock('pdfjs-dist', () => ({
 }));
 
 // Suppress console errors and warnings in tests
-// Store original console methods
 const originalError = console.error;
 const originalWarn = console.warn;
 
-// Suppress React error boundary errors and other expected errors
-global.console = {
-  ...console,
-  error: jest.fn((...args) => {
-    // Suppress React error boundary errors that are expected in tests
-    const errorMessage = args[0]?.toString() || '';
-    if (
-      errorMessage.includes('Error: Uncaught') ||
-      errorMessage.includes('The above error occurred') ||
-      errorMessage.includes('React will try to recreate') ||
-      errorMessage.includes('Consider adding an error boundary') ||
-      errorMessage.includes('Not implemented: navigation')
-    ) {
-      return; // Suppress these specific errors
-    }
-    // Log other errors for debugging
-    // originalError.apply(console, args);
-  }),
-  warn: jest.fn((...args) => {
-    // Suppress specific warnings
-    const warnMessage = args[0]?.toString() || '';
-    if (
-      warnMessage.includes('Not implemented') ||
-      warnMessage.includes('navigation')
-    ) {
-      return; // Suppress jsdom warnings
-    }
-    // Log other warnings for debugging
-    // originalWarn.apply(console, args);
-  }),
-};
+// Create a jest spy that filters expected errors
+console.error = jest.fn((...args: any[]) => {
+  const errorMessage = args[0]?.toString() || '';
+  
+  // Suppress React error boundary errors that are expected in tests
+  if (
+    errorMessage.includes('Error: Uncaught') ||
+    errorMessage.includes('The above error occurred') ||
+    errorMessage.includes('React will try to recreate') ||
+    errorMessage.includes('Consider adding an error boundary') ||
+    errorMessage.includes('Not implemented: navigation') ||
+    errorMessage.includes('ErrorBoundary caught an error')
+  ) {
+    return; // Suppress these specific errors
+  }
+  
+  // Allow other errors through for debugging
+  originalError.apply(console, args);
+});
+
+// Create a jest spy that filters expected warnings
+console.warn = jest.fn((...args: any[]) => {
+  const warnMessage = args[0]?.toString() || '';
+  
+  // Suppress jsdom warnings
+  if (
+    warnMessage.includes('Not implemented') ||
+    warnMessage.includes('navigation')
+  ) {
+    return; // Suppress jsdom warnings
+  }
+  
+  // Allow other warnings through for debugging
+  originalWarn.apply(console, args);
+});
