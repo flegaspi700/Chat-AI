@@ -9,8 +9,9 @@ An intelligent AI-powered chat application built with Next.js 15 and Google Gemi
 ## ✨ Features
 
 - **💬 Conversational AI Chat:** Interact with Google Gemini 2.5 Flash to ask questions and get information from your provided sources
-- **📚 Chat History:** Save and load multiple conversations with auto-generated titles ✨ NEW
-- **✨ Content Summaries:** AI-generated summaries for uploaded files and URLs with key points ✨ NEW
+- **📚 Chat History:** Save and load multiple conversations with auto-generated titles
+- **🔍 Conversation Search:** Search conversations by title or message content with real-time filtering
+- **✨ Content Summaries:** AI-generated summaries for uploaded files and URLs with key points
 - **📥 Export Conversations:** Download chat history as TXT or PDF files ✨ NEW
 - **⚡ Streaming Responses:** Real-time AI response streaming with animated progress indicator
 - **💾 Auto-Save Everything:** Messages, sources, themes, and conversations automatically persist across sessions
@@ -127,8 +128,9 @@ Comprehensive documentation is available in the `docs/` folder:
 ### ✅ What's Working (Oct 17, 2025)
 
 - **Chat Interface** - Full conversational AI with context from sources
-- **Chat History** - Save, load, and manage multiple conversations ✨ NEW
-- **Content Summaries** - AI-generated summaries for files and URLs ✨ NEW
+- **Chat History** - Save, load, and manage multiple conversations
+- **Conversation Search** - Search by title or message content with debounced filtering
+- **Content Summaries** - AI-generated summaries for files and URLs
 - **Export Conversations** - Download chat history as TXT or PDF ✨ NEW
 - **Response Streaming** - Real-time token-by-token AI responses
 - **Data Persistence** - Auto-save/restore messages, sources, themes, and conversations
@@ -167,9 +169,10 @@ See **[Development Issue Log](./docs/04-development/dev-issue-log.md)** for deta
 ### Medium Priority (Enhanced UX)
 7. ~~**Chat History**~~ ✅ COMPLETED (Oct 17, 2025) - Save and load past conversations
 8. ~~**Content Summaries**~~ ✅ COMPLETED (Oct 17, 2025) - AI-generated summaries for uploaded sources
-9. ~~**Export Conversations**~~ ✅ COMPLETED (Oct 30, 2025) - Download chat history as TXT/PDF
-10. **Keyboard Shortcuts** - More productivity shortcuts
-11. **Advanced Search** - Search within conversations
+9. ~~**Conversation Search**~~ ✅ COMPLETED (Oct 17, 2025) - Search conversations by title and content
+10. ~~**Export Conversations**~~ ✅ COMPLETED (Oct 30, 2025) - Download chat history as TXT/PDF
+11. **Keyboard Shortcuts** - More productivity shortcuts
+12. **Advanced Search Filters** - Filter by date, source type, message count
 
 ### Low Priority (Future Features)
 18. **User Authentication** - Multi-user support with accounts
@@ -324,7 +327,7 @@ Built with:
 - 📚 **Documentation** - Updated README and test coverage metrics
 
 ### October 17, 2025 (Afternoon Session)
-- ✅ **Chat History Management** - Complete conversation management system ✨ NEW
+- ✅ **Chat History Management** - Complete conversation management system
   - Save and load multiple conversations
   - Auto-generated conversation titles from first message
   - Smart sorting by recent activity
@@ -332,7 +335,14 @@ Built with:
   - Seamless conversation switching
   - Timestamps and message counts
   - Auto-save on every change
-- ✅ **Content Summaries** - AI-powered source summaries ✨ NEW
+- ✅ **Conversation Search** - Real-time search functionality
+  - Search conversations by title or message content
+  - Case-insensitive with debounced input (300ms)
+  - Clear button to reset search
+  - Shows "No conversations found" when no matches
+  - Custom `useConversationSearch` hook
+  - 14 unit tests + 9 E2E tests (27 runs across browsers)
+- ✅ **Content Summaries** - AI-powered source summaries
   - Generate 200-300 word summaries for any source
   - 3-5 key points extraction
   - Collapsible summary display
