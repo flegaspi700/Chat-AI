@@ -23,12 +23,22 @@ import {
   Calendar,
   FileText,
   MessageSquare,
+  Tags,
 } from 'lucide-react';
 import type { Conversation } from '@/lib/types';
 import {
   loadConversations,
   deleteConversation,
+  saveConversation,
 } from '@/lib/storage';
+import { 
+  addTagToConversation, 
+  removeTagFromConversation,
+  getAllTags,
+  filterConversationsByTags,
+} from '@/lib/conversation-tags';
+import { ConversationTags } from '@/components/conversation-tags';
+import { TagFilter } from '@/components/tag-filter';
 import { useConversationSearch, type ConversationFilters, type DateRangeFilter, type SourceTypeFilter } from '@/hooks/use-conversation-search';
 import {
   DropdownMenu,
@@ -60,7 +70,16 @@ export function ConversationHistory({
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [filters, setFilters] = useState<ConversationFilters>({});
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const { toast } = useToast();
+
+  // Get all tags with metadata
+  const allTags = getAllTags(conversations);
+
+  // Apply tag filtering to conversations
+  const tagFilteredConversations = selectedTags.length > 0
+    ? filterConversationsByTags(conversations, selectedTags)
+    : conversations;
 
   // Use search hook with filters and 300ms debounce for better performance
   const { 
@@ -70,7 +89,7 @@ export function ConversationHistory({
     clearSearch, 
     hasResults,
     hasActiveFilters,
-  } = useConversationSearch(conversations, { debounce: 300, filters });
+  } = useConversationSearch(tagFilteredConversations, { debounce: 300, filters });
 
   // Load conversations on mount
   useEffect(() => {
@@ -164,11 +183,52 @@ export function ConversationHistory({
     setFilters({});
   };
 
+  const handleToggleTagFilter = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag)
+        ? prev.filter((t) => t !== tag)
+        : [...prev, tag]
+    );
+  };
+
+  const handleClearTagFilters = () => {
+    setSelectedTags([]);
+  };
+
+  const handleAddTag = (conversationId: string, tag: string) => {
+    const conversation = conversations.find((c) => c.id === conversationId);
+    if (!conversation) return;
+
+    const updated = addTagToConversation(conversation, tag);
+    saveConversation(updated);
+    setConversations(loadConversations());
+    
+    toast({
+      title: 'Tag added',
+      description: `Added "${tag}" to conversation`,
+    });
+  };
+
+  const handleRemoveTag = (conversationId: string, tag: string) => {
+    const conversation = conversations.find((c) => c.id === conversationId);
+    if (!conversation) return;
+
+    const updated = removeTagFromConversation(conversation, tag);
+    saveConversation(updated);
+    setConversations(loadConversations());
+    
+    toast({
+      title: 'Tag removed',
+      description: `Removed "${tag}" from conversation`,
+    });
+  };
+
   const getActiveFilterCount = () => {
     let count = 0;
     if (filters.dateRange && filters.dateRange !== 'all') count++;
     if (filters.sourceType && filters.sourceType !== 'all') count++;
     if (filters.minMessages || filters.maxMessages) count++;
+    if (selectedTags.length > 0) count++;
     return count;
   };
 
@@ -291,6 +351,14 @@ export function ConversationHistory({
             </DropdownMenuContent>
           </DropdownMenu>
           </Tooltip>
+          
+          {/* Tag Filter */}
+          <TagFilter
+            allTags={allTags}
+            selectedTags={selectedTags}
+            onToggleTag={handleToggleTagFilter}
+            onClearFilters={handleClearTagFilters}
+          />
         </div>
 
         {/* Active Filters Display */}
@@ -395,12 +463,20 @@ export function ConversationHistory({
                       <div className="font-medium text-sm line-clamp-2 mb-1">
                         {conversation.title}
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
                         <Clock className="h-3 w-3" />
                         <span>{formatDate(conversation.updatedAt)}</span>
                         <span>·</span>
                         <span>{conversation.messages.length} messages</span>
                       </div>
+                      {conversation.tags && conversation.tags.length > 0 && (
+                        <ConversationTags
+                          tags={conversation.tags}
+                          onRemoveTag={(tag) => handleRemoveTag(conversation.id, tag)}
+                          onTagClick={handleToggleTagFilter}
+                          size="sm"
+                        />
+                      )}
                     </div>
 
                     {/* Action Buttons */}
