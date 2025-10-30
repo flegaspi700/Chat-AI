@@ -82,9 +82,42 @@ jest.mock('pdfjs-dist', () => ({
   version: '4.0.0',
 }));
 
-// Suppress console errors in tests (optional)
-global.console = {
-  ...console,
-  error: jest.fn(),
-  warn: jest.fn(),
-};
+// Suppress console errors and warnings in tests
+const originalError = console.error;
+const originalWarn = console.warn;
+
+// Create a jest spy that filters expected errors
+console.error = jest.fn((...args: any[]) => {
+  const errorMessage = args[0]?.toString() || '';
+  
+  // Suppress React error boundary errors that are expected in tests
+  if (
+    errorMessage.includes('Error: Uncaught') ||
+    errorMessage.includes('The above error occurred') ||
+    errorMessage.includes('React will try to recreate') ||
+    errorMessage.includes('Consider adding an error boundary') ||
+    errorMessage.includes('Not implemented: navigation') ||
+    errorMessage.includes('ErrorBoundary caught an error')
+  ) {
+    return; // Suppress these specific errors
+  }
+  
+  // Allow other errors through for debugging
+  originalError.apply(console, args);
+});
+
+// Create a jest spy that filters expected warnings
+console.warn = jest.fn((...args: any[]) => {
+  const warnMessage = args[0]?.toString() || '';
+  
+  // Suppress jsdom warnings
+  if (
+    warnMessage.includes('Not implemented') ||
+    warnMessage.includes('navigation')
+  ) {
+    return; // Suppress jsdom warnings
+  }
+  
+  // Allow other warnings through for debugging
+  originalWarn.apply(console, args);
+});
