@@ -2,6 +2,8 @@ export type Message = {
   id: string;
   role: 'user' | 'ai';
   content: string;
+  editedAt?: number; // Timestamp of last edit
+  originalContent?: string; // Original content before edits
 };
 
 export type FileInfo = {
@@ -36,4 +38,13 @@ export type Conversation = {
   aiTheme?: AITheme;
   createdAt: number;
   updatedAt: number;
+  tags?: string[]; // Array of tag names
+};
+
+export type TagMetadata = {
+  name: string;
+  color: string; // Hex color for visual distinction
+  count: number; // Number of conversations with this tag
+  createdAt: number;
+  lastUsed: number;
 };

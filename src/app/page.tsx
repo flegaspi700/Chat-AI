@@ -35,6 +35,7 @@ import { useStreamingResponse } from '@/hooks/use-streaming';
 import { validateMessageLength } from '@/lib/validation';
 import { applyThemeStyles } from '@/components/ai-theme-generator';
 import { ErrorBoundary, ChatErrorFallback, SidebarErrorFallback } from '@/components/error-boundary';
+import { editMessage, truncateMessagesAfter } from '@/lib/message-editing';
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -48,6 +49,8 @@ export default function Home() {
   const [conversationTitle, setConversationTitle] = useState<string>('New Conversation');
   const [activeTab, setActiveTab] = useState<string>('conversations');
   const [showExportDialog, setShowExportDialog] = useState(false);
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editedContent, setEditedContent] = useState<string>('');
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const { setTheme } = useTheme();
@@ -247,6 +250,79 @@ export default function Home() {
     });
   };
 
+  const handleEditStart = (messageId: string, content: string) => {
+    setEditingMessageId(messageId);
+    setEditedContent(content);
+  };
+
+  const handleEditCancel = () => {
+    setEditingMessageId(null);
+    setEditedContent('');
+  };
+
+  const handleEditSave = async (messageId: string, newContent: string) => {
+    if (!newContent.trim() || pending || isStreaming) return;
+
+    // Validate message length
+    const validation = validateMessageLength(newContent);
+    if (!validation.isValid) {
+      toast({
+        variant: 'destructive',
+        title: validation.error || 'Invalid input',
+        description: validation.details || 'Please check your message and try again.',
+      });
+      return;
+    }
+
+    // Update the message
+    const updatedMessages = editMessage(messages, messageId, newContent);
+    
+    // Truncate messages after the edited message
+    const truncatedMessages = truncateMessagesAfter(updatedMessages, messageId);
+    
+    // Update state
+    setMessages(truncatedMessages);
+    setEditingMessageId(null);
+    setEditedContent('');
+    
+    // Now regenerate from this point
+    const aiMessageId = crypto.randomUUID();
+    setPending(true);
+    setStreamingMessageId(aiMessageId);
+    reset();
+
+    const fileContent = files.map(f => `Source: ${f.name} (${f.type})\n${f.content}`).join('\n\n---\n\n');
+
+    // Stream the AI response
+    await streamResponse(newContent, fileContent || undefined, {
+      onComplete: (fullText) => {
+        // Add the complete message to history
+        const aiMessage: Message = { id: aiMessageId, role: 'ai', content: fullText };
+        setMessages((prev) => [...prev, aiMessage]);
+        setStreamingMessageId(null);
+        setPending(false);
+        
+        toast({
+          title: 'Message Edited',
+          description: 'Successfully regenerated response from edited message.',
+        });
+      },
+      onError: (error) => {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: error,
+        });
+        setStreamingMessageId(null);
+        setPending(false);
+      },
+    });
+  };
+
+  const handleEditContentChange = (content: string) => {
+    setEditedContent(content);
+  };
+
   // Setup keyboard shortcuts
   useKeyboardShortcuts({
     onNewConversation: handleNewConversation,
@@ -324,7 +400,17 @@ export default function Home() {
           <ErrorBoundary FallbackComponent={ChatErrorFallback} resetKeys={[messages.length]}>
             <div className="flex-1 overflow-y-auto px-3 py-4 sm:px-4 sm:py-6 md:px-8 lg:px-12 xl:px-16">
               <div className="max-w-4xl mx-auto">
-                <ChatMessages messages={messages} hasFiles={files.length > 0} />
+                <ChatMessages 
+                  messages={messages} 
+                  hasFiles={files.length > 0}
+                  editingMessageId={editingMessageId}
+                  editedContent={editedContent}
+                  isStreaming={isStreaming || pending}
+                  onEditStart={handleEditStart}
+                  onEditCancel={handleEditCancel}
+                  onEditSave={handleEditSave}
+                  onEditContentChange={handleEditContentChange}
+                />
               {isStreaming && streamingText && (
                 <div className="flex gap-2 sm:gap-3 mb-4 sm:mb-6">
                   <div className="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full bg-primary">
