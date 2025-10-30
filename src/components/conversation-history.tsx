@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, RefObject } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -13,45 +13,58 @@ import {
   Search,
   X,
   Download,
+  Filter,
+  Calendar,
+  FileText,
+  MessageSquare,
 } from 'lucide-react';
 import type { Conversation } from '@/lib/types';
 import {
   loadConversations,
   deleteConversation,
 } from '@/lib/storage';
-import { useConversationSearch } from '@/hooks/use-conversation-search';
+import { useConversationSearch, type ConversationFilters, type DateRangeFilter, type SourceTypeFilter } from '@/hooks/use-conversation-search';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
 } from '@/components/ui/dropdown-menu';
 import { exportAsTxt, exportAsPdf } from '@/lib/export';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
 
 interface ConversationHistoryProps {
   onNewConversation: () => void;
   onLoadConversation: (conversation: Conversation) => void;
   currentConversationId: string | null;
+  searchInputRef?: RefObject<HTMLInputElement>;
+  showExportDialog?: boolean;
+  onCloseExportDialog?: () => void;
 }
 
 export function ConversationHistory({
   onNewConversation,
   onLoadConversation,
   currentConversationId,
+  searchInputRef,
 }: ConversationHistoryProps) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [filters, setFilters] = useState<ConversationFilters>({});
   const { toast } = useToast();
 
-  // Use search hook with 300ms debounce for better performance
+  // Use search hook with filters and 300ms debounce for better performance
   const { 
     filteredConversations, 
     searchQuery, 
     setSearchQuery, 
     clearSearch, 
-    hasResults 
-  } = useConversationSearch(conversations, { debounce: 300 });
+    hasResults,
+    hasActiveFilters,
+  } = useConversationSearch(conversations, { debounce: 300, filters });
 
   // Load conversations on mount
   useEffect(() => {
@@ -125,6 +138,34 @@ export function ConversationHistory({
     });
   };
 
+  const handleDateRangeFilter = (range: DateRangeFilter) => {
+    setFilters((prev) => ({
+      ...prev,
+      dateRange: prev.dateRange === range ? undefined : range,
+      customDateStart: undefined,
+      customDateEnd: undefined,
+    }));
+  };
+
+  const handleSourceTypeFilter = (sourceType: SourceTypeFilter) => {
+    setFilters((prev) => ({
+      ...prev,
+      sourceType: prev.sourceType === sourceType ? undefined : sourceType,
+    }));
+  };
+
+  const handleClearFilters = () => {
+    setFilters({});
+  };
+
+  const getActiveFilterCount = () => {
+    let count = 0;
+    if (filters.dateRange && filters.dateRange !== 'all') count++;
+    if (filters.sourceType && filters.sourceType !== 'all') count++;
+    if (filters.minMessages || filters.maxMessages) count++;
+    return count;
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* New Conversation Button */}
@@ -146,6 +187,7 @@ export function ConversationHistory({
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
+            ref={searchInputRef}
             type="text"
             placeholder="Search conversations..."
             value={searchQuery}
@@ -163,6 +205,101 @@ export function ConversationHistory({
             </button>
           )}
         </div>
+      </div>
+
+      {/* Filter Controls */}
+      <div className="px-3 pb-3 space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="flex-1">
+                <Filter className="mr-2 h-3 w-3" />
+                Filters
+                {hasActiveFilters && (
+                  <Badge variant="secondary" className="ml-2 h-4 px-1 text-xs">
+                    {getActiveFilterCount()}
+                  </Badge>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56">
+              <DropdownMenuLabel className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Date Range
+              </DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => handleDateRangeFilter('today')}>
+                {filters.dateRange === 'today' && '✓ '}Today
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDateRangeFilter('last-7-days')}>
+                {filters.dateRange === 'last-7-days' && '✓ '}Last 7 days
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleDateRangeFilter('last-30-days')}>
+                {filters.dateRange === 'last-30-days' && '✓ '}Last 30 days
+              </DropdownMenuItem>
+              
+              <DropdownMenuSeparator />
+              
+              <DropdownMenuLabel className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Source Type
+              </DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => handleSourceTypeFilter('files')}>
+                {filters.sourceType === 'files' && '✓ '}Files only
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSourceTypeFilter('urls')}>
+                {filters.sourceType === 'urls' && '✓ '}URLs only
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSourceTypeFilter('none')}>
+                {filters.sourceType === 'none' && '✓ '}No sources
+              </DropdownMenuItem>
+              
+              {hasActiveFilters && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleClearFilters} className="text-destructive">
+                    Clear all filters
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        {/* Active Filters Display */}
+        {hasActiveFilters && (
+          <div className="flex flex-wrap gap-1">
+            {filters.dateRange && filters.dateRange !== 'all' && (
+              <Badge variant="secondary" className="text-xs">
+                <Calendar className="mr-1 h-3 w-3" />
+                {filters.dateRange === 'today' && 'Today'}
+                {filters.dateRange === 'last-7-days' && 'Last 7 days'}
+                {filters.dateRange === 'last-30-days' && 'Last 30 days'}
+                <button
+                  type="button"
+                  onClick={() => setFilters((prev) => ({ ...prev, dateRange: undefined }))}
+                  className="ml-1 hover:text-destructive"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            )}
+            {filters.sourceType && filters.sourceType !== 'all' && (
+              <Badge variant="secondary" className="text-xs">
+                <FileText className="mr-1 h-3 w-3" />
+                {filters.sourceType === 'files' && 'Files'}
+                {filters.sourceType === 'urls' && 'URLs'}
+                {filters.sourceType === 'none' && 'No sources'}
+                <button
+                  type="button"
+                  onClick={() => setFilters((prev) => ({ ...prev, sourceType: undefined }))}
+                  className="ml-1 hover:text-destructive"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            )}
+          </div>
+        )}
       </div>
 
       <Separator />

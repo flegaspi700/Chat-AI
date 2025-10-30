@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { FileInfo, Message, Conversation } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
+import { useTheme } from 'next-themes';
 import { ChatHeader } from '@/components/chat-header';
 import { ChatMessages, ChatMessagesSkeleton } from '@/components/chat-messages';
 import { ChatInputForm } from '@/components/chat-input-form';
@@ -44,7 +46,10 @@ export default function Home() {
   const [currentConversationId, setCurrentConversationIdState] = useState<string | null>(null);
   const [conversationTitle, setConversationTitle] = useState<string>('New Conversation');
   const [activeTab, setActiveTab] = useState<string>('conversations');
+  const [showExportDialog, setShowExportDialog] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const { setTheme } = useTheme();
   const { streamingText, isStreaming, streamResponse, reset } = useStreamingResponse();
 
   // Load persisted data on mount
@@ -230,6 +235,28 @@ export default function Home() {
     });
   };
 
+  // Setup keyboard shortcuts
+  useKeyboardShortcuts({
+    onNewConversation: handleNewConversation,
+    onSearchFocus: () => {
+      setActiveTab('conversations');
+      // Focus search input after tab switch
+      setTimeout(() => searchInputRef.current?.focus(), 100);
+    },
+    onExport: () => {
+      if (messages.length > 0) {
+        setShowExportDialog(true);
+      }
+    },
+    onThemeToggle: () => {
+      setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    },
+    onEscape: () => {
+      setShowExportDialog(false);
+    },
+    disabled: pending || isStreaming,
+  });
+
   // Don't render until data is loaded to prevent flash
   if (!isLoaded) {
     return null;
@@ -258,6 +285,9 @@ export default function Home() {
                   onNewConversation={handleNewConversation}
                   onLoadConversation={handleLoadConversation}
                   currentConversationId={currentConversationId}
+                  searchInputRef={searchInputRef}
+                  showExportDialog={showExportDialog}
+                  onCloseExportDialog={() => setShowExportDialog(false)}
                 />
               </TabsContent>
               
