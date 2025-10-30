@@ -11,6 +11,7 @@ An intelligent AI-powered chat application built with Next.js 15 and Google Gemi
 - **💬 Conversational AI Chat:** Interact with Google Gemini 2.5 Flash to ask questions and get information from your provided sources
 - **📚 Chat History:** Save and load multiple conversations with auto-generated titles ✨ NEW
 - **✨ Content Summaries:** AI-generated summaries for uploaded files and URLs with key points ✨ NEW
+- **📥 Export Conversations:** Download chat history as TXT or PDF files ✨ NEW
 - **⚡ Streaming Responses:** Real-time AI response streaming with animated progress indicator
 - **💾 Auto-Save Everything:** Messages, sources, themes, and conversations automatically persist across sessions
 - **🔒 Input Validation:** Comprehensive security with file size limits, URL validation, and SSRF protection
@@ -22,7 +23,7 @@ An intelligent AI-powered chat application built with Next.js 15 and Google Gemi
   - **🎨 AI-Powered Theme Generation:** Dynamically create and apply color themes with AI-generated background images powered by Gemini 2.5 Flash Image
 - **🌙 Dark/Light Mode:** Quick theme toggle with keyboard shortcut (`Ctrl+Shift+T`)
 - **📱 Responsive Design:** Modern, responsive UI that works across different screen sizes
-- **✅ Comprehensive Testing:** 164 tests with Jest and Playwright (51.2% coverage) with CI/CD pipeline
+- **✅ Comprehensive Testing:** 178 tests with Jest and Playwright (53.14% coverage) with CI/CD pipeline ✨ UPDATED
 
 ## 🚀 Getting Started
 
@@ -128,6 +129,7 @@ Comprehensive documentation is available in the `docs/` folder:
 - **Chat Interface** - Full conversational AI with context from sources
 - **Chat History** - Save, load, and manage multiple conversations ✨ NEW
 - **Content Summaries** - AI-generated summaries for files and URLs ✨ NEW
+- **Export Conversations** - Download chat history as TXT or PDF ✨ NEW
 - **Response Streaming** - Real-time token-by-token AI responses
 - **Data Persistence** - Auto-save/restore messages, sources, themes, and conversations
 - **Input Validation** - Comprehensive security and data validation
@@ -137,7 +139,7 @@ Comprehensive documentation is available in the `docs/` folder:
 - **URL Scraping** - Website content extraction with SSRF protection
 - **Source Management** - Add/remove files and URLs with summary generation
 - **Theme System** - Dark/light mode + AI-generated themes with optimized fonts
-- **Testing** - 164 tests, 51.2% coverage, CI/CD pipeline ✨ UPDATED
+- **Testing** - 178 tests, 53.14% coverage, CI/CD pipeline ✨ UPDATED
 - **CI/CD** - ESLint, Jest, and build checks on every push ✨ NEW
 
 ### 🚧 Known Limitations
@@ -165,7 +167,7 @@ See **[Development Issue Log](./docs/04-development/dev-issue-log.md)** for deta
 ### Medium Priority (Enhanced UX)
 7. ~~**Chat History**~~ ✅ COMPLETED (Oct 17, 2025) - Save and load past conversations
 8. ~~**Content Summaries**~~ ✅ COMPLETED (Oct 17, 2025) - AI-generated summaries for uploaded sources
-9. **Export Conversations** - Download chat history as PDF/TXT
+9. ~~**Export Conversations**~~ ✅ COMPLETED (Oct 30, 2025) - Download chat history as TXT/PDF
 10. **Keyboard Shortcuts** - More productivity shortcuts
 11. **Advanced Search** - Search within conversations
 
@@ -205,9 +207,9 @@ npx playwright show-report # View E2E test report
 ```
 
 **Current Status:**
-- 164 passing Jest tests, 13 skipped
-- 15+ E2E tests with Playwright
-- 51.2% statement coverage, 65.6% branch coverage
+- 178 passing Jest tests, 13 skipped
+- 20+ E2E tests with Playwright
+- 53.14% statement coverage, 68.09% branch coverage
 - CI/CD pipeline with automated checks
 
 For complete testing guide, see **[Testing Documentation](./docs/02-testing/README.md)**.
@@ -252,10 +254,10 @@ Contributions are welcome! Please see:
 
 | Metric | Value | Last Updated |
 |--------|-------|--------------|
-| **Lines of Code** | ~6,700+ lines | Oct 17, 2025 |
-| **Documentation** | ~17,000+ lines | Oct 17, 2025 |
-| **Tests** | 164+ tests | Oct 20, 2025 |
-| **Test Coverage** | 51.2% statements, 65.6% branches | Oct 20, 2025 |
+| **Lines of Code** | ~7,000+ lines | Oct 30, 2025 |
+| **Documentation** | ~21,000+ lines | Oct 30, 2025 |
+| **Tests** | 178+ tests | Oct 30, 2025 |
+| **Test Coverage** | 53.14% statements, 68.09% branches | Oct 30, 2025 |
 | **Components** | 32+ reusable UI components | Oct 17, 2025 |
 | **AI Flows** | 6 Genkit flows | Oct 17, 2025 |
 | **Custom Hooks** | 5 hooks | Oct 17, 2025 |
@@ -280,7 +282,28 @@ Built with:
 
 ## 🆕 Recent Updates
 
-### October 20, 2025 - CI/CD Pipeline & Code Quality ✨ NEW
+### October 30, 2025 - Export Conversations ✨ NEW
+- ✅ **Export to TXT** - Download conversations as plain text files
+  - Clean, readable format with metadata
+  - Includes sources and summaries
+  - One-click download from conversation history
+- ✅ **Export to PDF** - Professional PDF documents
+  - Styled with proper typography
+  - Color-coded messages (blue for user, green for AI)
+  - Multi-page support with automatic page breaks
+  - Includes conversation metadata and sources
+- ✅ **Export UI** - Intuitive export interface
+  - Download button appears on conversation hover
+  - Dropdown menu with format selection
+  - Success/error toast notifications
+  - Safe filename generation with timestamps
+- ✅ **Testing** - Comprehensive test coverage
+  - 14 new unit tests (exportConversationToTxt, exportConversationToPdf)
+  - 5 new E2E tests (export button, dropdown, toasts)
+  - 84.16% coverage in export.ts
+- 📚 **Documentation** - Full feature documentation in [docs/03-features/export-conversations.md](./docs/03-features/export-conversations.md)
+
+### October 20, 2025 - CI/CD Pipeline & Code Quality
 - ✅ **CI/CD Pipeline** - Automated quality checks on every push
   - ESLint code quality validation
   - Jest unit and integration tests
@@ -363,4 +386,4 @@ Built with:
 
 ---
 
-**Last Updated:** October 20, 2025
+**Last Updated:** October 30, 2025
