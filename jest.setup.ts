@@ -38,6 +38,13 @@ Object.defineProperty(global, 'crypto', {
   },
 });
 
+// Mock TextEncoder and TextDecoder for jsPDF
+if (typeof global.TextEncoder === 'undefined') {
+  const { TextEncoder, TextDecoder } = require('util');
+  global.TextEncoder = TextEncoder;
+  global.TextDecoder = TextDecoder;
+}
+
 // Mock scrollIntoView
 Element.prototype.scrollIntoView = jest.fn();
 

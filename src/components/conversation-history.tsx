@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Search,
   X,
+  Download,
 } from 'lucide-react';
 import type { Conversation } from '@/lib/types';
 import {
@@ -19,6 +20,14 @@ import {
   deleteConversation,
 } from '@/lib/storage';
 import { useConversationSearch } from '@/hooks/use-conversation-search';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { exportAsTxt, exportAsPdf } from '@/lib/export';
+import { useToast } from '@/hooks/use-toast';
 
 interface ConversationHistoryProps {
   onNewConversation: () => void;
@@ -33,6 +42,7 @@ export function ConversationHistory({
 }: ConversationHistoryProps) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const { toast } = useToast();
 
   // Use search hook with 300ms debounce for better performance
   const { 
@@ -68,6 +78,31 @@ export function ConversationHistory({
 
   const handleLoadConversation = (conversation: Conversation) => {
     onLoadConversation(conversation);
+  };
+
+  const handleExport = async (e: React.MouseEvent, conversation: Conversation, format: 'txt' | 'pdf') => {
+    e.stopPropagation();
+    try {
+      if (format === 'txt') {
+        exportAsTxt(conversation);
+        toast({
+          title: 'Exported as TXT',
+          description: `${conversation.title} has been downloaded.`,
+        });
+      } else {
+        await exportAsPdf(conversation);
+        toast({
+          title: 'Exported as PDF',
+          description: `${conversation.title} has been downloaded.`,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Export failed',
+        description: error instanceof Error ? error.message : 'Failed to export conversation',
+        variant: 'destructive',
+      });
+    }
   };
 
   const formatDate = (timestamp: number) => {
@@ -203,18 +238,44 @@ export function ConversationHistory({
                       </div>
                     </div>
 
-                    {/* Delete Button */}
-                    <button
-                      type="button"
-                      className={`h-8 w-8 shrink-0 transition-opacity inline-flex items-center justify-center rounded-md hover:bg-destructive/10 hover:text-destructive touch-manipulation ${
-                        isHovered || isActive ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      onClick={(e) => handleDelete(e, conversation.id)}
-                      aria-label="Delete conversation"
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                      <span className="sr-only">Delete conversation</span>
-                    </button>
+                    {/* Action Buttons */}
+                    <div className={`flex gap-1 shrink-0 transition-opacity ${
+                      isHovered || isActive ? 'opacity-100' : 'opacity-0'
+                    }`}>
+                      {/* Export Dropdown */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            type="button"
+                            className="h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground touch-manipulation"
+                            aria-label="Export conversation"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Download className="h-4 w-4" />
+                            <span className="sr-only">Export conversation</span>
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={(e) => handleExport(e, conversation, 'txt')}>
+                            Export as TXT
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={(e) => handleExport(e, conversation, 'pdf')}>
+                            Export as PDF
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+
+                      {/* Delete Button */}
+                      <button
+                        type="button"
+                        className="h-8 w-8 inline-flex items-center justify-center rounded-md hover:bg-destructive/10 hover:text-destructive touch-manipulation"
+                        onClick={(e) => handleDelete(e, conversation.id)}
+                        aria-label="Delete conversation"
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <span className="sr-only">Delete conversation</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
